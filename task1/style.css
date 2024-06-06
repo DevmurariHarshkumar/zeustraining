@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+
+
+
+.ddiivv {
+    background-color: blanchedalmond;
+    font-family: monospace;
+}
+
+#iidd{
+    color: red;
+    font-family: "Roboto", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+}
+
+
+
+.main_box{
+    padding: 0px;
+    width: 457px;
+    height: 138px;
+    border: 1px, solid, black;
+    display: flex;
+    margin: auto;
+}
+
+.profile_pic{
+    height: 130px;
+    size: 10x;
+    margin: 4px 0px 4px 4px;
+}
+.username {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #000000;
+    margin: 14px 14px 7px 14px;
+    padding: 0px;
+
+}
+
+.tagline {
+    margin: 7px 14px 14px 14px;
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    color: #000000;
+    padding: 0px;
+
+}
+
+.icons_div {
+    margin: 10px 0px 0px 14px;
+    display: flex;
+    font-family: "Roboto", sans-serif;
+    font-size: 15px;
+    font-style: medium;
+    color: #858991;
+}
+
+.ind_icon{
+    display: flex;
+    margin-right: 24px;
+}
+
+.number{
+    margin-left: 14px;
+}
+
+/* 
+.material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 20
+} */

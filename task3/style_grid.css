@@ -1,0 +1,47 @@
+.container{
+    border: 2px solid black;
+    display: grid;
+    grid-template-rows: 100px 100px 100px 100px 100px 100px 100px 100px;
+    grid-template-columns: 100px 100px 100px 100px 100px 100px 100px 100px;
+    grid-gap: 2px;
+    font-family: sans-serif;
+}
+
+.item{
+    font-size: 20px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.item-1{
+    background: linear-gradient(135deg , rgb(123, 69, 248,1) ,rgb(123, 69, 248,0.7));
+    grid-area: 1 / 1 / 2 / 9;
+}
+
+.item-2{
+    background: linear-gradient(45deg , rgb(17, 139, 123,1) , rgb(4, 252, 169,0.6));
+    grid-area: 2 / 1 / 8 / 3;
+}
+
+.item-3{
+    background: linear-gradient(135deg ,rgb(123, 69, 248),rgb(7, 133, 236),cyan);
+    grid-area: 2 / 3 / 5 / 9;
+}
+
+.item-4{
+    background: linear-gradient(135deg ,rgb(123, 69, 248),rgb(7, 133, 236),cyan);
+    grid-area: 5 / 3 / 8 / 6;
+}
+
+.item-5{
+    background: linear-gradient(135deg ,rgb(123, 69, 248),rgb(7, 133, 236),cyan);
+    grid-area: 5 / 6 / 8 / 9;
+}
+
+.item-6{
+    background: linear-gradient(135deg , rgb(123, 69, 248,1) ,rgb(123, 69, 248,0.7));
+    grid-area: 8 / 1 / 9 / 9;
+}
