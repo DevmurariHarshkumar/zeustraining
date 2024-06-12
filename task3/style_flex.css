@@ -1,14 +1,10 @@
-.container{
-    border: 2px solid black;
-    display: grid;
-    grid-template-rows: 100px 100px 100px 100px 100px 100px 100px 100px;
-    grid-template-columns: 100px 100px 100px 100px 100px 100px 100px 100px;
-    grid-gap: 2px;
-    font-family: sans-serif;
+.main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.item{
-    border: 2px solid black;
+.i{
     font-size: 20px;
     color: white;
     display: flex;
@@ -16,39 +12,53 @@
     align-items: center;
 }
 
+.row2{
+    display: flex;
+    flex-direction: row;
+}
 
-.item-1{
-    height: 200;
-    width: 800;
+.boxes{
+    display: flex;
+    flex-direction: column;
+}
+
+.smallboxes{
+    display: flex;
+    flex-direction: row;
+}
+
+.header{
+    height: 100px;
+    width: 800px;
     background: linear-gradient(135deg , rgb(123, 69, 248,1) ,rgb(123, 69, 248,0.7));
 }
 
-.item-2{
-    height: 400;
-    width: 200;
+.navbar{
+    height: 500px;
+    width: 200px;
     background: linear-gradient(45deg , rgb(17, 139, 123,1) , rgb(4, 252, 169,0.6));
 }
 
-.item-3{
-    height: 200;
-    width: 300;
+.content1{
+    height: 250px;
+    width: 600px;
     background: linear-gradient(135deg ,rgb(123, 69, 248),rgb(7, 133, 236),cyan);
 }
 
-.item-4{
-    height: 200;
-    width: 300;
+.content2{
+    height: 250px;
+    width: 300px;
     background: linear-gradient(135deg ,rgb(123, 69, 248),rgb(7, 133, 236),cyan);
 }
 
-.item-5{
-    height: 200;
-    width: 600;
+.content3{
+    height: 250px;
+    width: 300px;
     background: linear-gradient(135deg ,rgb(123, 69, 248),rgb(7, 133, 236),cyan);
 }
 
-.item-6{
-    height: 200;
-    width: 800;
+.footer{
+    height: 100px;
+    width: 800px;
     background: linear-gradient(135deg , rgb(123, 69, 248,1) ,rgb(123, 69, 248,0.7));
 }

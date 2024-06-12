@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+Homepage
+{% endblock %}
+
+{% block main %}
+    <form action="/csv" method="POST">
+        <input name="file" type="file" accept=".csv">
+        <input type="submit" name="submit" value="Continue">
+    </form>
+{% endblock %}
