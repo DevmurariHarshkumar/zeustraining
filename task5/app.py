@@ -1,5 +1,6 @@
 import os
-import csv
+import csv as ccc
+import time
 import sqlite3
 # import cv2 as cv
 import numpy as nu
@@ -12,7 +13,7 @@ import flask_session
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helper import csv_processing
+# from helper import csv_processing
 
 
 # Configure application
@@ -27,6 +28,7 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
+
 
 
 # Connecting to database
@@ -44,26 +46,45 @@ except:
     print(f"Error while connecting to sqlite")
 
 
-db.execute("CREATE TABLE users(id INTEGER PRIMARY KEY, idx INTEGER, fname VARCHAR(100), lname TEXT, company TEXT, city TEXT, country TEXT, p1 INTEGER, p2 INTEGER, email TEXT, subdate TEXT, website TEXT)")
+db.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, idx INTEGER, fname VARCHAR(100), lname TEXT, company TEXT, city TEXT, country TEXT, p1 INTEGER, p2 INTEGER, email TEXT, subdate TEXT, website TEXT)")
+
+
+def processing(file):
+    print("inside processing function")
+    print(file)
+    print(type(file))
+    with open(file, 'r') as fin:
+        dr = ccc.DictReader(fin)
+        # for row in dr:
+        #     print(row["Customer Id"])
+        # preposessing eg. handeling missing vals
+        for row in dr:
+            for column in row:
+                # print(column)
+                if column == None or column == "":
+                    print("HERE IS NULL COLUMN")
+                    # replace it with something then....
+        start_time = time.time()
+        print("starting insertion now")
+
+        # Index,Customer Id,First Name,Last Name,Company,City,Country,Phone 1,Phone 2,Email,Subscription Date,Website
+        
+        with open(file,'r') as fin:
+            dr = ccc.DictReader(fin)
+            to_db = [(i['Index'], i['Customer Id'], i['First Name'], i['Last Name'], i['Company'], i['City'], i['Country'], i['Phone 1'], i['Phone 2'], i['Email'], i['Subscription Date'], i['Website']) for i in dr]
+        db.executemany("INSERT INTO users (id, idx, fname, lname, company, city, country, p1, p2, email, subdate, website) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", to_db)
+        conn.commit()
+        end_time = time.time()
+        print("insertion successfull")
+        print("time of insertion: ", end_time-start_time)
+        # db.execute("SELECT * FROM users")
+        db.execute("SELECT * FROM users ORDER BY id DESC LIMIT 10")
+        dis = db.fetchall()
+        
+        return dis
 
 
 
-
-
-"""
-insert csv file directly into database
-"""
-# Index,Customer Id,First Name,Last Name,Company,City,Country,Phone 1,Phone 2,Email,Subscription Date,Website
-
-with open('customers-100000.csv','r') as fin:
-    dr = csv.DictReader(fin)
-    to_db = [(i['Index'], i['Customer Id'], i['First Name'], i['Last Name'], i['Company'], i['City'], i['Country'], i['Phone 1'], i['Phone 2'], i['Email'], i['Subscription Date'], i['Website']) for i in dr]
-db.executemany("INSERT INTO users (id, idx, fname, lname, company, city, country, p1, p2, email, subdate, website) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", to_db)
-conn.commit()
-print("insertion successfull")
-
-db.execute("SELECT * FROM users")
-print("xyz", db.fetchall())
 
 
 # APP ROUTES
@@ -73,14 +94,17 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/csv", methods=["GET", "POST"])
-def csv():
-    if request.method == "GET":
-        return render_template("csv.html")
-    else:
+@app.route("/csv_f", methods=["GET", "POST"])
+def csv_f():
+
+
+    if request.method == "POST":
         file = request.form.get("file")
         print("filereceiveed", file)
-        return csv_processing(file)
+        print(type(file))
+        return processing(file)
+    else:
+        return render_template("csv_f.html")
 
 
 
@@ -102,206 +126,206 @@ def csv():
 
 
 
-'''
-db.execute("CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT, email TEXT, password TEXT)")
+# '''
+# db.execute("CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT, email TEXT, password TEXT)")
 
-db.execute(""" /*hjhj*/
-CREATE TABLE colleges(
-SrNo DOUBLE,
-Merit_Score VARCHAR(100),
-Choice_Code DOUBLE,
-Institute VARCHAR(100),
-Course_Name VARCHAR(100),
-Exam_JEEMHT__CET VARCHAR(100),
-Type VARCHAR(100),
-Seat_Type VARCHAR(100)
-);""")
-'''
+# db.execute(""" /*hjhj*/
+# CREATE TABLE colleges(
+# SrNo DOUBLE,
+# Merit_Score VARCHAR(100),
+# Choice_Code DOUBLE,
+# Institute VARCHAR(100),
+# Course_Name VARCHAR(100),
+# Exam_JEEMHT__CET VARCHAR(100),
+# Type VARCHAR(100),
+# Seat_Type VARCHAR(100)
+# );""")
+# '''
 
 
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    # If user reached route via POST
-    if request.method == "POST":
-        # Getting info
-        name = request.form.get("name")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        confirmation = request.form.get("confirmation")
+# @app.route("/register", methods=["GET", "POST"])
+# def register():
+#     # If user reached route via POST
+#     if request.method == "POST":
+#         # Getting info
+#         name = request.form.get("name")
+#         email = request.form.get("email")
+#         password = request.form.get("password")
+#         confirmation = request.form.get("confirmation")
 
-        # Check whether password is strong enough
-        x = password_check(password)
-        if x is False:
-            return apology("Please satisfy password requirements")
+#         # Check whether password is strong enough
+#         x = password_check(password)
+#         if x is False:
+#             return apology("Please satisfy password requirements")
 
-        # Checking if password equal to confirmation
-        if not password == confirmation:
-            return apology("Password and confirmation didnt matched")
+#         # Checking if password equal to confirmation
+#         if not password == confirmation:
+#             return apology("Password and confirmation didnt matched")
 
-        # Generating hash to store in database
-        hash = generate_password_hash(password)
+#         # Generating hash to store in database
+#         hash = generate_password_hash(password)
 
-        # Storing in database
-        db.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [name, email, hash])
-        # print("tables interior: ")
-        db.execute("SELECT * FROM users")
-        # print(f"fetch of register", db.fetchall())
+#         # Storing in database
+#         db.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [name, email, hash])
+#         # print("tables interior: ")
+#         db.execute("SELECT * FROM users")
+#         # print(f"fetch of register", db.fetchall())
 
-        # Set the sender and recipient email addresses
-        sender_email = 'dronacharya.counsellor@gmail.com'
-        sender_password = 'ncmltbtaqqkhtmsv'
-        recipient_email = 'harshdevmurari007@gmail.com'
-        visit_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#         # Set the sender and recipient email addresses
+#         sender_email = 'dronacharya.counsellor@gmail.com'
+#         sender_password = 'ncmltbtaqqkhtmsv'
+#         recipient_email = 'harshdevmurari007@gmail.com'
+#         visit_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # Send me email
-        send_notification_email(sender_email, sender_password, recipient_email, name, email, visit_time)
+#         # Send me email
+#         send_notification_email(sender_email, sender_password, recipient_email, name, email, visit_time)
 
-        return redirect("/login")
+#         return redirect("/login")
     
-    # If user reached route via GET
-    else:
-        return render_template("register.html")
+#     # If user reached route via GET
+#     else:
+#         return render_template("register.html")
 
 
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    # If user reached route via POST
-    if request.method == "POST":
-        # Forget any previous user
+# @app.route("/login", methods=["GET", "POST"])
+# def login():
+#     # If user reached route via POST
+#     if request.method == "POST":
+#         # Forget any previous user
 
-        # Getting info
-        name = request.form.get("name")
-        password = request.form.get("password")
+#         # Getting info
+#         name = request.form.get("name")
+#         password = request.form.get("password")
 
-        # Validating info with database
-        db.execute("SELECT * FROM users")
-        rows = db.fetchall()
-        # print(f"fetch of login: {rows}")
-        for row in rows:
-            if row[1] == name:
-                # Remember which user has logged in
-                #session["id"] = rows[0][0]
-                print("successfull login")
-                return redirect("/details")
-        return apology("Please register if you havent")
+#         # Validating info with database
+#         db.execute("SELECT * FROM users")
+#         rows = db.fetchall()
+#         # print(f"fetch of login: {rows}")
+#         for row in rows:
+#             if row[1] == name:
+#                 # Remember which user has logged in
+#                 #session["id"] = rows[0][0]
+#                 print("successfull login")
+#                 return redirect("/details")
+#         return apology("Please register if you havent")
 
-    # If user reached route via GET
-    else:
-        return render_template("login.html")
+#     # If user reached route via GET
+#     else:
+#         return render_template("login.html")
 
 
 
-@app.route("/details", methods=["GET", "POST"])
-def details():
-    # If user reached route via POST
-    if request.method == "POST":
-        # Getting user info
-        cet = request.form.get("cet") # Getting input via scanning QR of marklist
-        jee = request.form.get("jee")
-        location = request.form.get("location") # Location tracking using ip address
-        entered_location = request.form.get("entered_location")
-        ce = request.form.get("Computer Engineering")
-        it = request.form.get("Information Technology")
-        cse = request.form.get("Computer Science and Engineering(Data Science)")
-        ai = request.form.get("Artificial Intelligence and Data Science")
-        mech = request.form.get("Mechanical Engineering")
-        ee = request.form.get("Electronics Engineering")
-        che = request.form.get("Chemical Engineering")
-        et = request.form.get("Electronics and Telecommunication\nEngg")
-        ae = request.form.get("Automobile Engineering")
+# @app.route("/details", methods=["GET", "POST"])
+# def details():
+#     # If user reached route via POST
+#     if request.method == "POST":
+#         # Getting user info
+#         cet = request.form.get("cet") # Getting input via scanning QR of marklist
+#         jee = request.form.get("jee")
+#         location = request.form.get("location") # Location tracking using ip address
+#         entered_location = request.form.get("entered_location")
+#         ce = request.form.get("Computer Engineering")
+#         it = request.form.get("Information Technology")
+#         cse = request.form.get("Computer Science and Engineering(Data Science)")
+#         ai = request.form.get("Artificial Intelligence and Data Science")
+#         mech = request.form.get("Mechanical Engineering")
+#         ee = request.form.get("Electronics Engineering")
+#         che = request.form.get("Chemical Engineering")
+#         et = request.form.get("Electronics and Telecommunication\nEngg")
+#         ae = request.form.get("Automobile Engineering")
 
-        # Basic errorhandeling
-        if cet=="" and jee=="":
-            return apology("Atleast one marks are required")
+#         # Basic errorhandeling
+#         if cet=="" and jee=="":
+#             return apology("Atleast one marks are required")
         
-        if location == "enter":
-            # Find and use API
-            print(f"Users entered location is: {entered_location}")
-        elif location == "track":
-            userlocation = user_tracked_location()
-            # print(f"Your current location is: {userlocation}")
-        else:
-            return apology("please provide location") 
+#         if location == "enter":
+#             # Find and use API
+#             print(f"Users entered location is: {entered_location}")
+#         elif location == "track":
+#             userlocation = user_tracked_location()
+#             # print(f"Your current location is: {userlocation}")
+#         else:
+#             return apology("please provide location") 
 
-        # Scanning QR code
-        '''
-        NOT IMPLEMENTED DUE TO PYZBAR ".dll" DISCREPANCY
-        cap = cv.VideoCapture(2)
+#         # Scanning QR code
+#         '''
+#         NOT IMPLEMENTED DUE TO PYZBAR ".dll" DISCREPANCY
+#         cap = cv.VideoCapture(2)
 
-        while True:
-            _, frame = cap.read()
+#         while True:
+#             _, frame = cap.read()
 
-            barcode = pyzbar.decode(frame)
-            for bdata in barcode:
-                print(f"data  {bdata.data}")
-                Data = barcode.data.decode("utf-8")
-                Type = barcode.type
-                print(f"data  {Data}")
-                print(f"type  {Type}")
-            break
-        '''
+#             barcode = pyzbar.decode(frame)
+#             for bdata in barcode:
+#                 print(f"data  {bdata.data}")
+#                 Data = barcode.data.decode("utf-8")
+#                 Type = barcode.type
+#                 print(f"data  {Data}")
+#                 print(f"type  {Type}")
+#             break
+#         '''
 
-        # Database query for best clg suggestions
-        li = [ce, it, cse, ai, mech, ee, che, et, ae]
-        fli = []
-        ffli = []
-        for item in li:
-            if item != None:
-                fli.append([item])
+#         # Database query for best clg suggestions
+#         li = [ce, it, cse, ai, mech, ee, che, et, ae]
+#         fli = []
+#         ffli = []
+#         for item in li:
+#             if item != None:
+#                 fli.append([item])
 
-        for item in range(len(fli)):
-            ffli.append(fli[item][0])
+#         for item in range(len(fli)):
+#             ffli.append(fli[item][0])
 
-        params = []
-        params.append(jee)
-        for item in ffli:
-            params.append(item)
-        # print(f"params: {params}")
+#         params = []
+#         params.append(jee)
+#         for item in ffli:
+#             params.append(item)
+#         # print(f"params: {params}")
         
-        # Database query for colleges in which admission is possible due to jee
-        db.execute("SELECT * FROM colleges WHERE Merit_Score<=? AND Exam_JEEMHT__CET='JEE' AND Course_Name IN (%s)"%', '.join('?' for a in ffli), params)
-        global clg_jee_list
-        clg_jee_list = db.fetchall()
-        # print(f"clg_jee_list: {clg_jee_list}")
+#         # Database query for colleges in which admission is possible due to jee
+#         db.execute("SELECT * FROM colleges WHERE Merit_Score<=? AND Exam_JEEMHT__CET='JEE' AND Course_Name IN (%s)"%', '.join('?' for a in ffli), params)
+#         global clg_jee_list
+#         clg_jee_list = db.fetchall()
+#         # print(f"clg_jee_list: {clg_jee_list}")
 
-        params[0] = cet
-        #print(f"params: {params}")
-        # Database query for colleges in which admission is possible due to mht-cet
-        db.execute("SELECT * FROM colleges WHERE Merit_Score<=? AND Exam_JEEMHT__CET='MHT CET' AND Course_Name IN (%s)"%', '.join('?' for a in ffli), params)
-        global clg_cet_list
-        clg_cet_list = db.fetchall()
-        # print(f"clg_cet_list: {clg_cet_list}")
+#         params[0] = cet
+#         #print(f"params: {params}")
+#         # Database query for colleges in which admission is possible due to mht-cet
+#         db.execute("SELECT * FROM colleges WHERE Merit_Score<=? AND Exam_JEEMHT__CET='MHT CET' AND Course_Name IN (%s)"%', '.join('?' for a in ffli), params)
+#         global clg_cet_list
+#         clg_cet_list = db.fetchall()
+#         # print(f"clg_cet_list: {clg_cet_list}")
 
-        # Merging both jee and mht-cet lists
-        global clg_list 
-        clg_list = clg_jee_list + clg_cet_list
-        # print(f"clg_list: {clg_list}")
+#         # Merging both jee and mht-cet lists
+#         global clg_list 
+#         clg_list = clg_jee_list + clg_cet_list
+#         # print(f"clg_list: {clg_list}")
 
-        '''
-        APLTERNATE CORRECT APPROCH BUT NOT WORKING PROPERLY DUE TO DISCREPANCY IN DATA
-        skips some list items and displays it...........
+#         '''
+#         APLTERNATE CORRECT APPROCH BUT NOT WORKING PROPERLY DUE TO DISCREPANCY IN DATA
+#         skips some list items and displays it...........
 
-        for list in clg_list:
-            if (list[5] == "JEE" and list[1] > jee) or (list[5] == "MHT CET" and list[1] > cet):
-                print(list)
-                print()
-                clg_list.remove(list)
+#         for list in clg_list:
+#             if (list[5] == "JEE" and list[1] > jee) or (list[5] == "MHT CET" and list[1] > cet):
+#                 print(list)
+#                 print()
+#                 clg_list.remove(list)
 
-        print(f"clg_list : {clg_list}")
-        '''
+#         print(f"clg_list : {clg_list}")
+#         '''
 
-        return redirect("/suggestions")
-    # If user reached route via GET
-    else:
-        return render_template("details.html")
+#         return redirect("/suggestions")
+#     # If user reached route via GET
+#     else:
+#         return render_template("details.html")
 
 
 
-@app.route("/suggestions")
-def suggestions():
-    # Rendering suggestions along with clg list generated in runtime
-    return render_template("suggestions.html", clg_list = clg_list)
+# @app.route("/suggestions")
+# def suggestions():
+#     # Rendering suggestions along with clg list generated in runtime
+#     return render_template("suggestions.html", clg_list = clg_list)
 
 
 
