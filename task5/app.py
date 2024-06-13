@@ -125,7 +125,6 @@ def csv_f():
 
 
 
-
 # '''
 # db.execute("CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT, email TEXT, password TEXT)")
 
