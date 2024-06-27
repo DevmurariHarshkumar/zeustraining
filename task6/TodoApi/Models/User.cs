@@ -19,7 +19,7 @@ public class User
     [Required]
     public string City { get; set; } = string.Empty;
     [Required]
-    public long Tno { get; set; }
+    public string Tno { get; set; } = string.Empty;
     [Required]
     public string A1 { get; set; } = string.Empty;
     [Required]
