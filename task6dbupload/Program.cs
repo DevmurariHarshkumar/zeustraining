@@ -8,14 +8,19 @@ using MySqlConnector;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Data;
+using mmongo;
 
 namespace dbupload{
     public class Program(){
         public static void Main(string[] args){
-            Console.WriteLine("receiver on the fooking line");
+            Console.WriteLine("receiver online...");
 
             FastestUpload dbUpload = new FastestUpload();
             var x = dbUpload.UploadToDb();
+            Console.WriteLine("asdhfjkhasdjlkfhasdjlkhfjhu");
+
+            Mongo connector = new Mongo();
+            connector.EstablishMongoConn();
 
             Console.WriteLine("program.cs end");
         }

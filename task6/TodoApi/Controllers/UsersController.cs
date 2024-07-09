@@ -10,7 +10,6 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Data;
 using MySql.Data.MySqlClient;
-using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -31,13 +30,12 @@ namespace api.Controllers
         {
             var x = _context.user.ToList();
             return Ok(x);
-
         }
 
 
         // OLD METHOD 2 MINUTES
         [HttpPost("uploadonebyone")]
-        public async Task<ActionResult> Uploadlong(IFormFile file)
+        public ActionResult Uploadlong(IFormFile file)
         {
             // Console.WriteLine("filename", file);
             Upload fileobj = new Upload();
@@ -52,7 +50,7 @@ namespace api.Controllers
 
         // NEW METHOD STORED PROCEDURES
         [HttpPost("uploadstoredprocedure")]
-        public async Task<ActionResult> uploadStoredProcedures(IFormFile file)
+        public ActionResult uploadStoredProcedures(IFormFile file)
         {
             Upload fileobj = new Upload();
             var result = fileobj.UploadStoredProcedure(file);
@@ -65,7 +63,7 @@ namespace api.Controllers
 
         [HttpPost("uploadsinglequery")]
 
-        public async Task<IActionResult> Fastestupload(IFormFile file)
+        public IActionResult Fastestupload(IFormFile file)
         {
             Upload fileobj = new Upload();
             var result = fileobj.FastestUpload(file);

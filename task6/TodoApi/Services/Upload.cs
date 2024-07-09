@@ -10,7 +10,6 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Data;
 using MySql.Data.MySqlClient;
-using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -31,14 +30,14 @@ namespace api.Controllers{
             {
                 mConnection.Open();
                 stopWatch.Start();
-                using (TextFieldParser parser = new TextFieldParser(file.OpenReadStream()))
+                using (TextFieldParser parser = new TextFieldParser(file?.OpenReadStream()!))
                 {
                     parser.TextFieldType = FieldType.Delimited;
                     parser.SetDelimiters(",");
-                    while (!parser.EndOfData)
+                    while (!parser!.EndOfData)
                     {
                         //Process row
-                        string[] fields = parser.ReadFields();
+                        string[] fields = parser?.ReadFields()!;
                         string f0 = fields[0];
                         string f1 = fields[1];
                         string f2 = fields[2];
@@ -73,7 +72,6 @@ namespace api.Controllers{
             stopWatch.Stop();
             Console.WriteLine("TOTAL TIME" + stopWatch.Elapsed);
             return true;
-            
         }
 
 
@@ -92,19 +90,19 @@ namespace api.Controllers{
                 mConnection.Open();
                 // string ssCommand;
                 // ssCommand = "";
-                using (TextFieldParser parser = new TextFieldParser(file.OpenReadStream()))
+                using (TextFieldParser parser = new TextFieldParser(file?.OpenReadStream()!))
                 {
                     parser.TextFieldType = FieldType.Delimited;
                     parser.SetDelimiters(",");
                     Stopwatch stopWatch2 = new Stopwatch();
                     stopWatch2.Start();
-                    while (!parser.EndOfData)
+                    while (!parser!.EndOfData)
                     {
                         if (parser == null){
                             Console.WriteLine("asdfafj");
                         }
                         //Process row
-                        string[] fields = parser.ReadFields();
+                        string[] fields = parser?.ReadFields()!;
 
                         using (var myCmd = new MySql.Data.MySqlClient.MySqlCommand("InsertIntoXYZ", mConnection))
                         {

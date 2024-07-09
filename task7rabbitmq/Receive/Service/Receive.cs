@@ -17,7 +17,6 @@ namespace preprocess{
     public class Processing
     {
         public void AddToQueue2(List<User> userToUpload){
-            Console.WriteLine("inside addtoqueue2");
             
             var factory = new ConnectionFactory { HostName = "localhost" };
             using var connection = factory.CreateConnection();
@@ -130,7 +129,7 @@ namespace preprocess{
             channel.BasicConsume(queue: "queue1",
                                 autoAck: true,
                                 consumer: consumer);
-                                
+
             Console.WriteLine(" Press [enter] to exit.");
             Console.ReadLine();
 

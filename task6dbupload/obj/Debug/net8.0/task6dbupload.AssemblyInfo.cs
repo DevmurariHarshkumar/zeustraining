@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("task6dbupload")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c34761eb1b8ba32ed531bed3275c4b9881cd27bd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+792e3d5343407883f5fec09017acfab234a734f9")]
 [assembly: System.Reflection.AssemblyProductAttribute("task6dbupload")]
 [assembly: System.Reflection.AssemblyTitleAttribute("task6dbupload")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
