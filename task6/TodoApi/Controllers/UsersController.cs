@@ -12,6 +12,7 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using mmongo;
 
 
 
@@ -55,6 +56,8 @@ namespace api.Controllers
             Upload fileobj = new Upload();
             var result = fileobj.UploadStoredProcedure(file);
             if(result){
+                Mongo connector = new Mongo();
+                connector.EstablishMongoConn();
                 return Ok();
             }
             return BadRequest("file process failed");
@@ -68,6 +71,7 @@ namespace api.Controllers
             Upload fileobj = new Upload();
             var result = fileobj.FastestUpload(file);
             if(result){
+
                 return Ok();
             }
             return BadRequest("file process failed");

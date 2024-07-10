@@ -17,10 +17,11 @@ namespace dbupload{
 
             FastestUpload dbUpload = new FastestUpload();
             var x = dbUpload.UploadToDb();
-            Console.WriteLine("asdhfjkhasdjlkfhasdjlkhfjhu");
 
-            Mongo connector = new Mongo();
-            connector.EstablishMongoConn();
+            // if (x != null){
+            //     Mongo connector = new Mongo();
+            //     connector.EstablishMongoConn();
+            // }
 
             Console.WriteLine("program.cs end");
         }

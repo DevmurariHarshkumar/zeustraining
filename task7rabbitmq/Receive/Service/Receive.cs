@@ -12,6 +12,7 @@ using System.Data;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
 using Newtonsoft.Json.Serialization;
+using mmongo;
 
 namespace preprocess{
     public class Processing
@@ -113,6 +114,8 @@ namespace preprocess{
                     }
                     if(num!=0){
                         Console.WriteLine("batch uploaded to queue");
+                        Mongo connector = new Mongo();
+                        connector.EstablishMongoConn();
                         AddToQueue2(userToUpload);
                         userToUpload.Clear();
                         num = 0;

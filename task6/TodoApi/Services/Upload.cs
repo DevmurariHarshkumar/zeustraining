@@ -12,6 +12,7 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using mmongo;
 
 namespace api.Controllers{
     public class Upload{
@@ -151,7 +152,10 @@ namespace api.Controllers{
                                 routingKey: "queue1",
                                 basicProperties: null,
                                 body: fileBytes);
+                                
             Console.WriteLine($" [x] Sent {fileBytes}");
+            Mongo connector = new Mongo();
+            connector.EstablishMongoConn();
 
             Console.WriteLine(" Press [enter] to exit.");
             return true;

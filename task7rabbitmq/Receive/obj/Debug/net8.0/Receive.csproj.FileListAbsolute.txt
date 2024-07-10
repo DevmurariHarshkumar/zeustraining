@@ -258,3 +258,15 @@ D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\runtimes\w
 D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\AWSSDK.Core.dll
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\AWSSDK.SecurityToken.dll
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\DnsClient.dll
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\MongoDB.Bson.dll
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\MongoDB.Driver.dll
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\MongoDB.Driver.Core.dll
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\MongoDB.Libmongocrypt.dll
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\SharpCompress.dll
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\Snappier.dll
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\runtimes\linux\native\libmongocrypt.so
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\runtimes\osx\native\libmongocrypt.dylib
+D:\HARSH\training\zeustraining\task7rabbitmq\Receive\bin\Debug\net8.0\runtimes\win\native\mongocrypt.dll
