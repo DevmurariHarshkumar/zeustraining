@@ -13,6 +13,8 @@ namespace dbupload
 {
     public class FastestUpload
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public string UploadToDb()
         {
             Console.WriteLine("inside fastest upload...");
@@ -81,28 +83,24 @@ namespace dbupload
                     myCommand.CommandText = sCommand.ToString();
                     myCommand.ExecuteNonQuery();
                     myTrans.Commit();
-                    Mongo connector = new Mongo();
-                    connector.EstablishMongoConn();
+                    watch.Stop();
+                    log.Info($"Execution Time: {watch.ElapsedMilliseconds} ms");
                 }
                 catch(Exception e){
                     try{
                         myTrans.Rollback();
                     }
                     catch (MySqlException ex){
-                        if (myTrans.Connection != null){
-                        Console.WriteLine("An exception of type " + ex.GetType() +
-                        " was encountered while attempting to roll back the transaction.");
+                            if (myTrans.Connection != null){
+                            log.Error("An exception of type " + ex.GetType() + " was encountered while attempting to roll back the transaction.");
                         }
                     }
-                    Console.WriteLine("An exception of type " + e.GetType() +
-                    " was encountered while inserting the data.");
-                    Console.WriteLine("Neither record was written to database.");
+                    log.Error("An exception of type " + e.GetType() + " was encountered while inserting the data.");
+                    log.Info("Neither record was written to database.");
                 }
                 finally{
-                        myConnection.Close();
+                    myConnection.Close();
                 }
-                watch.Stop();
-                Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms");
 
 
 

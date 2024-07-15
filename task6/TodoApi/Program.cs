@@ -30,6 +30,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-Console.WriteLine("THIS is written manually");
-
 app.Run();

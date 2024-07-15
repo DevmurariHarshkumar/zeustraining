@@ -22,7 +22,6 @@ namespace preprocess{
                 Mongo connector = new Mongo();
                 connector.EstablishMongoConn();
             }
-            
             Console.WriteLine("end of program.cs");
             
     }

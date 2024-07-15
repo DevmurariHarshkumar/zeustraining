@@ -38,7 +38,6 @@ namespace api.Controllers
         [HttpPost("uploadonebyone")]
         public ActionResult Uploadlong(IFormFile file)
         {
-            // Console.WriteLine("filename", file);
             Upload fileobj = new Upload();
             var result = fileobj.UploadLong(file);
             if(result){

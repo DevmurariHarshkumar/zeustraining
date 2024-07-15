@@ -18,11 +18,6 @@ namespace dbupload{
             FastestUpload dbUpload = new FastestUpload();
             var x = dbUpload.UploadToDb();
 
-            // if (x != null){
-            //     Mongo connector = new Mongo();
-            //     connector.EstablishMongoConn();
-            // }
-
             Console.WriteLine("program.cs end");
         }
     }

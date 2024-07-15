@@ -14,15 +14,15 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using mmongo;
 
+[assembly: log4net.Config.XmlConfigurator(Watch=true)]
+
 namespace api.Controllers{
     public class Upload{
-        
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public bool UploadLong(IFormFile file){
-            
-            Console.WriteLine("filename", file.FileName[0]);
             if (file == null)
             {
-                Console.WriteLine("NULL");
+                log.Error("File not received.");
             }
             string aConnectionString = "Server=127.0.0.1; User ID=root; Password=root; Database=harsh";
             Stopwatch stopWatch = new Stopwatch();
@@ -57,7 +57,6 @@ namespace api.Controllers{
                         StringBuilder ssCommand = new StringBuilder("REPLACE INTO user (Email, Name, Country, State, City, Tno, A1, A2, DOB, GS1920, GS2021, GS2122, GS2223, GS2324) VALUES (");
                         string y;
                         y = String.Format("\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\", {9}, {10}, {11}, {12}, {13}", f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13);
-                        // Console.WriteLine("yyyy: "+ y);
                         ssCommand.Append(y);
                         ssCommand.Append(");");
 
@@ -71,17 +70,14 @@ namespace api.Controllers{
                 }
             }
             stopWatch.Stop();
-            Console.WriteLine("TOTAL TIME" + stopWatch.Elapsed);
+            log.Info("TOTAL TIME" + stopWatch.Elapsed);
             return true;
         }
 
-
-
         public bool UploadStoredProcedure(IFormFile file){
-            Console.WriteLine("filename: ", file.FileName[0]);
             if (file == null)
             {
-                Console.WriteLine("NULL");
+                log.Error("File not received.");
             }
 
             string aConnectionString = "Server=127.0.0.1; User ID=root; Password=root; Database=harsh; CharSet=utf8";
@@ -100,7 +96,7 @@ namespace api.Controllers{
                     while (!parser!.EndOfData)
                     {
                         if (parser == null){
-                            Console.WriteLine("asdfafj");
+                            log.Error("File is either empty or corrupted.");
                         }
                         //Process row
                         string[] fields = parser?.ReadFields()!;
@@ -126,14 +122,18 @@ namespace api.Controllers{
                         }
                     }
                     stopWatch2.Stop();
-                    Console.WriteLine("TOTAL TIME" + stopWatch2.Elapsed);
+                    log.Info("TOTAL TIME" + stopWatch2.Elapsed);
                 }
             }
             return true;
         }
 
-
         public bool FastestUpload(IFormFile file){
+            if (file == null)
+            {
+                log.Error("File not received.");
+            }
+            
             var factory = new ConnectionFactory { HostName = "localhost" };
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
@@ -145,8 +145,12 @@ namespace api.Controllers{
                     arguments: null);
 
             using var memoryStream = new MemoryStream();
-            file?.CopyTo(memoryStream);
-            var fileBytes = memoryStream.ToArray();
+            if (memoryStream == null){
+                log.Error("File is empty or corrupted");
+            }
+
+            file?.CopyTo(memoryStream!);
+            var fileBytes = memoryStream!.ToArray();
 
             channel.BasicPublish(exchange: string.Empty,
                                 routingKey: "queue1",

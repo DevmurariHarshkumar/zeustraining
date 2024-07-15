@@ -4,20 +4,23 @@ using RabbitMQ.Client.Events;
 using MySqlConnector;
 using System.Text.Json;
 using api.Models;
-
 using MongoDB.Driver;
 using MongoDB.Bson;
+[assembly: log4net.Config.XmlConfigurator(Watch=true)]
+
 
 
 namespace mmongo{
     public class Mongo
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public async void EstablishMongoConn()
         {
             // MONGODB CONNECTION
                 // mongodb+srv://harsh:Harsh@2003@mycluster.abcd1.mongodb.net/myFirstDatabase?appName=mongosh+2.2.10
                 //ENV VAR CONNECTION METHOD: var connectionString = Environment.GetEnvironmentVariable("MONGODB_URI");
-                Console.WriteLine("mongo db connection initiating...");
+                log.Info("mongo db connection initiating...");
                 // var connectionString = "mongodb+srv://harsh:Harsh@2003@mycluster.abcd1.mongodb.net/myFirstDatabase?appName=mongosh+2.2.10";
                 var connectionString = "mongodb://localhost:27017/logs";
 
@@ -27,8 +30,7 @@ namespace mmongo{
                 }
                 var client = new MongoClient(connectionString);
                 var collection = client.GetDatabase("logging").GetCollection<BsonDocument>("statuslogging");
-                Console.WriteLine("collection : "+collection);
-                Console.WriteLine("mongo db connection done.");
+                log.Info("mongo db connection done.");
 
                 Logging newlogging = new(){
                     CurrentStatus = "PREPROCESSING DONE"
@@ -41,7 +43,7 @@ namespace mmongo{
                 // await collection.InsertOneAsync(bsonDoc);
                 collection.InsertOne(bsonDoc);
                 
-                Console.WriteLine("mongo db insertion done.");
+                log.Info("mongo db insertion done.");
 
         }
     }

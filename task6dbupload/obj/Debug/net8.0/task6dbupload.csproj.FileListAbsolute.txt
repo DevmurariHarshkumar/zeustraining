@@ -268,3 +268,5 @@ D:\HARSH\training\zeustraining\task6dbupload\bin\Debug\net8.0\Snappier.dll
 D:\HARSH\training\zeustraining\task6dbupload\bin\Debug\net8.0\runtimes\linux\native\libmongocrypt.so
 D:\HARSH\training\zeustraining\task6dbupload\bin\Debug\net8.0\runtimes\osx\native\libmongocrypt.dylib
 D:\HARSH\training\zeustraining\task6dbupload\bin\Debug\net8.0\runtimes\win\native\mongocrypt.dll
+D:\HARSH\training\zeustraining\task6dbupload\bin\Debug\net8.0\log4net.dll
+D:\HARSH\training\zeustraining\task6dbupload\bin\Debug\net8.0\task6dbupload.dll.config

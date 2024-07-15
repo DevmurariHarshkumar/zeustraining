@@ -15,8 +15,8 @@ using Newtonsoft.Json.Serialization;
 using mmongo;
 
 namespace preprocess{
-    public class Processing
-    {
+    public class Processing{
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public void AddToQueue2(List<User> userToUpload){
             
             var factory = new ConnectionFactory { HostName = "localhost" };
@@ -30,7 +30,6 @@ namespace preprocess{
                     arguments: null);
             
             var serialized = JsonSerializer.Serialize(userToUpload);
-            // Console.WriteLine("serialized"+ serialized);
             byte[] byteofbatch = Encoding.ASCII.GetBytes(serialized);
 
             channel.BasicPublish(exchange: string.Empty,
@@ -101,7 +100,7 @@ namespace preprocess{
                             if (num > batch_size){
                                 // add to queue
                                 AddToQueue2(userToUpload);
-                                Console.WriteLine("batch uploaded to queue");
+                                log.Info("batch uploaded to queue");
                                 userToUpload.Clear();
                                 num = 0;
                             }
@@ -113,7 +112,7 @@ namespace preprocess{
                         }
                     }
                     if(num!=0){
-                        Console.WriteLine("batch uploaded to queue");
+                        log.Info("batch uploaded to queue");
                         Mongo connector = new Mongo();
                         connector.EstablishMongoConn();
                         AddToQueue2(userToUpload);
@@ -124,7 +123,7 @@ namespace preprocess{
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Internal server error: {ex.Message}");
+                    log.Error($"Internal server error: {ex.Message}");
                 }
                 Console.WriteLine("end of callback block");
             };
