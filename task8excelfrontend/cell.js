@@ -12,12 +12,15 @@ class Cell {
     drawCell() {
         c.strokeRect(this.x, this.y, this.width, this.height);
         c.fillStyle = "black";
-        c.font = "50px serif";
+        c.font = "30px serif";
         c.textAlign = "center";
         c.textBaseline = "middle";
+        c.textRendering = "auto";
         c.fillText(this.content, this.x+(this.width/2), this.y+(this.height/2), this.width);
     }
 }
+
+// would be useful while scrolling ctx.clearRect(10, 10, 120, 100);
 
 
 export {Cell};
