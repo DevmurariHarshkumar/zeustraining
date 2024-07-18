@@ -33,6 +33,7 @@ class Table {
         //     cell.drawCell();
         //     tillnowj += this.col_arr[0];
         // }
+        c.clearRect(0,0,8000,8000);
 
         var tillnowi = 0;
         for (var i = 0; i < this.row_arr.length; i++) {

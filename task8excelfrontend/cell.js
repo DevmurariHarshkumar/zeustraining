@@ -12,9 +12,11 @@ class Cell {
     }
 
     drawCell() {
+        c.clearRect(this.x_px,this.y_px,this.width,this.height);
+        c.strokeStyle = "rgba(153, 151, 151,0.3)";
         c.strokeRect(this.x_px, this.y_px, this.width, this.height);
         c.fillStyle = "black";
-        c.font = "30px serif";
+        c.font = "18px serif";
         c.textAlign = "center";
         c.textBaseline = "middle";
         c.textRendering = "auto";
