@@ -15,45 +15,81 @@ class Table {
     }
 
     drawTable() {
-        let tillnowi = this.row_arr[0];
-        for (let i = 0; i <= this.row_arr.length; i++) {
-            const content = String.fromCharCode(65 + i); // A == 65 ins ascii
-            const cell = new Cell(content, tillnowi, 0, this.row_arr[i], 50);
-            cell.drawCell();
-            tillnowi += this.row_arr[i];
-        }
+        // INDIVIDIAL INITIAL INDEXING ROW AND COLUMN
+        // let tillnowi = this.row_arr[0];
+        // for (let j = 0; j <= this.row_arr.length; j++) {
+        //     const content = String.fromCharCode(65 + j); // A == 65 ins ascii
+        //     this.table[0][j] = new Cell(content, tillnowi, 0, this.row_arr[0], 50, 0, j);
+        //     var cell = this.table[0][j];
+        //     cell.drawCell();
+        //     tillnowi += this.row_arr[0];
+        // }
 
-        let tillnowj = this.col_arr[0];
-        for (let j = 1; j < this.col_arr.length; j++) {
-            const content = j.toString();
-            let cell = new Cell(content, 0, tillnowj, 150, this.col_arr[j]);
-            cell.drawCell();
-            tillnowj += this.col_arr[j];
-        }
+        // let tillnowj = this.col_arr[0];
+        // for (let i = 1; i < this.col_arr.length; i++) {
+        //     const content = j.toString();
+        //     this.table[i][0] = new Cell(content, 0, tillnowj, 150, this.col_arr[0], i, 0);
+        //     var cell = this.table[i][0];
+        //     cell.drawCell();
+        //     tillnowj += this.col_arr[0];
+        // }
 
-        tillnowi = 0;
+        var tillnowi = 0;
         for (var i = 0; i < this.row_arr.length; i++) {
             this.table[i] = new Array(26);
-            tillnowj = 0;
+            var tillnowj = 0;
             for (var j = 0; j < this.col_arr.length; j++) {
-                this.table[i][j] = new Cell(
-                    "asdf",
-                    tillnowi + 150,
-                    tillnowj + 50,
-                    this.row_arr[i],
-                    this.col_arr[j],
-                    i,
-                    j
-                );
-                var cellnew = this.table[i][j];
-                cellnew.drawCell();
-                tillnowj = tillnowj + this.col_arr[j];
+                if (i == 0 || j == 0){
+                    if (i == 0){
+                        const content = (j).toString();
+                        this.table[i][j] = new Cell(
+                            content,
+                            tillnowi,
+                            tillnowj,
+                            this.row_arr[i],
+                            this.col_arr[j],
+                            i,
+                            j
+                        );
+                        var cellnew = this.table[i][j];
+                        cellnew.drawCell();
+                        tillnowj = tillnowj + this.col_arr[j];
+                    }
+                    else if(j == 0){
+                        const content = String.fromCharCode(65 + i-1); // A == 65 ins ascii
+                        this.table[i][j] = new Cell(
+                            content,
+                            tillnowi,
+                            tillnowj,
+                            this.row_arr[i],
+                            this.col_arr[j],
+                            i,
+                            j
+                        );
+                        var cellnew = this.table[i][j];
+                        cellnew.drawCell();
+                        tillnowj = tillnowj + this.col_arr[j];
+                    }
+                }
+                else{
+                    this.table[i][j] = new Cell(
+                        "asdf",
+                        tillnowi,
+                        tillnowj,
+                        this.row_arr[i],
+                        this.col_arr[j],
+                        i,
+                        j
+                    );
+                    var cellnew = this.table[i][j];
+                    cellnew.drawCell();
+                    tillnowj = tillnowj + this.col_arr[j];
+                }
             }
             tillnowi = tillnowi + this.row_arr[i];
         }
         console.log("table done");
     }
-
 }
 
 export { Table };
