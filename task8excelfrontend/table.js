@@ -11,7 +11,7 @@ class Table {
         this.no_col = no_col;
         this.row_arr = row_arr;
         this.col_arr = col_arr;
-        this.table = new Array(100);
+        this.table = new Array(no_row);
     }
 
     drawTable() {
