@@ -73,8 +73,8 @@ class Table {
                     }
                 }
                 else{
-                    this.table[i][j] = new Cell(
-                        [i + ", " + j],
+                    this.table[i][j] = new Cell(// [i + " " + j]
+                        i,
                         tillnowi,
                         tillnowj,
                         this.row_arr[i],

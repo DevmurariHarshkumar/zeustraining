@@ -201,7 +201,12 @@ canvas.addEventListener("mousedown", (event) => {
     }
 });
 
+
 canvas.addEventListener("mousemove", (event) => {
+    var sum = 0
+    var average = 0
+    var minn = 0 // to do max and min 
+    var maxx = 0
     if (isMouseDown) {
 		table.drawTable()
         let rect = canvas.getBoundingClientRect();
@@ -214,6 +219,16 @@ canvas.addEventListener("mousemove", (event) => {
 		selectedCells.forEach((cell, i) => {
 		drawSelectedCell(cell);
 		})
+
+        for(var i = 0; i < selectedCells.length; i++){
+            console.log("selectedi ", selectedCells[i])
+            sum += selectedCells[i].content;
+            average = sum/selectedCells.length;
+            minn = Math.min(minn, selectedCells[i]);
+            maxx = Math.max(maxx, selectedCells[i]);
+            console.log("sum", sum, average, minn, maxx);
+
+        }
     }
 });
 
