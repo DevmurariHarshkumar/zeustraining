@@ -74,7 +74,7 @@ class Table {
                 }
                 else{
                     this.table[i][j] = new Cell(
-                        "asdf",
+                        [i + ", " + j],
                         tillnowi,
                         tillnowj,
                         this.row_arr[i],
@@ -89,6 +89,7 @@ class Table {
             }
             tillnowi = tillnowi + this.row_arr[i];
         }
+        
         console.log("table done");
     }
 }

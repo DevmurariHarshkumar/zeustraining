@@ -16,17 +16,17 @@ table.drawTable();
 
 
 // now not useful as multiple area select can do this too....
-// var selected_cell = null;
-// canvas.addEventListener("click", (event) => {
-//     // rect is for considering movement by canvas moving and not just screen absolute position
-//     let rect = canvas.getBoundingClientRect();
-//     let x_position = event.clientX - rect.left;
-//     let y_position = event.clientY - rect.top;
-//     console.log("pixel_pos", x_position, y_position);
-//     var cell = getCellFromClick(x_position, y_position);
-//     selected_cell = cell;
-//     drawSelectedCell(cell);
-// });
+var selected_cell = null;
+canvas.addEventListener("click", (event) => {
+    // rect is for considering movement by canvas moving and not just screen absolute position
+    let rect = canvas.getBoundingClientRect();
+    let x_position = event.clientX - rect.left;
+    let y_position = event.clientY - rect.top;
+    console.log("pixel_pos", x_position, y_position);
+    var cell = getCellFromClick(x_position, y_position);
+    selected_cell = cell;
+    drawSelectedCell(cell);
+});
 
 
 function getCellFromClick(x, y) {
@@ -65,9 +65,17 @@ function drawSelectedCell(cell) {
         cell.y_px + cell.height / 2,
         cell.width
     );
+    c.beginPath()
+    c.arc((cell.x_px+cell.width), (cell.y_px+cell.height), 6, 0, 2 * Math.PI);
+    c.fillStyle = "rgba(5, 96, 242, 1)";
+    c.fill()
+    c.stroke();
+    
 
     var headercell = table.table[0][cell.y_pos];
-    c.fillStyle = "red";
+    // c.fillStyle = "red";
+    c. fillStyle = "rgba(0, 120, 215, 0.3)"
+    
     c.fillRect(
         headercell.x_px + 1,
         headercell.y_px + 1,
@@ -75,7 +83,8 @@ function drawSelectedCell(cell) {
         headercell.height - 2
     );
     var indexcell = table.table[cell.x_pos][0];
-    c.fillStyle = "yellow";
+    // c.fillStyle = "yellow";
+    c. fillStyle = "rgba(0, 120, 215, 0.3)"
     c.fillRect(
         indexcell.x_px + 1,
         indexcell.y_px + 1,
@@ -95,6 +104,7 @@ canvas.addEventListener("dblclick", (event) => {
 });
 
 window.addEventListener("keydown", (event) => {
+    table.drawTable()
     console.log("keydown", event.key);
     if (event.key == "ArrowUp") {
         var nextcell =
@@ -123,9 +133,6 @@ window.addEventListener("keydown", (event) => {
 });
 
 
-
-
-
 var selectedCells;
 var isMouseDown;
 var initialCell;
@@ -133,7 +140,7 @@ var finalCell;
 
 // implementation 1 with norml pos wala
 function getSelectedCells(initialCell, finalCell) {
-	console.log("inn getselcted:", table.table.length, initialCell, finalCell);
+	// console.log("inn getselcted: initial and final cells: ", initialCell, finalCell);
 	const selectedCells = [];
 	const startX = Math.min(initialCell.x_pos, finalCell.x_pos);
 	const endX = Math.max(initialCell.x_pos, finalCell.x_pos);
@@ -181,7 +188,9 @@ canvas.addEventListener("mousedown", (event) => {
     let x_position = event.clientX - rect.left;
     let y_position = event.clientY - rect.top;
     initialCell = getCellFromClick(x_position, y_position);
-	console.log("initialCell in mousedown: ", initialCell)
+    selected_cell = initialCell;
+	// console.log("initialCell in mousedown: ", selected_cell, "asdfsdaf")
+    console.log("dsfafasdf", initialCell)
     if (initialCell) {
         isMouseDown = true;
         selectedCells = [initialCell];
@@ -200,7 +209,6 @@ canvas.addEventListener("mousemove", (event) => {
         let y_position = event.clientY - rect.top;
         finalCell = getCellFromClick(x_position, y_position);
 		console.log("finalcell in mousemove: ", initialCell, finalCell);
-        
 		selectedCells = getSelectedCells(initialCell, finalCell);
 		console.log("selectedCells: ", selectedCells)
 		selectedCells.forEach((cell, i) => {
