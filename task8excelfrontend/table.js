@@ -5,13 +5,15 @@ class Table {
         no_row,
         no_col,
         row_arr = [150, 150, 150],
-        col_arr = [50, 50, 50]
+        col_arr = [50, 50, 50],
+        content = [[4], [5], [6]][[8], [9], [0]]
     ) {
         this.no_row = no_row;
         this.no_col = no_col;
         this.row_arr = row_arr;
         this.col_arr = col_arr;
         this.table = new Array(no_row);
+        this.content = content;
     }
 
     drawTable() {
@@ -36,6 +38,7 @@ class Table {
         c.clearRect(0,0,8000,8000);
 
         var tillnowi = 0;
+        console.log("asdfasdfasdfasdfasdfasdfsdf", this.content)
         for (var i = 0; i < this.row_arr.length; i++) {
             this.table[i] = new Array(26);
             var tillnowj = 0;
@@ -73,8 +76,9 @@ class Table {
                     }
                 }
                 else{
-                    this.table[i][j] = new Cell(// [i + " " + j]
-                        i,
+                    this.table[i][j] = new Cell(
+                        // [i + " " + j],
+                        this.content[j][i],
                         tillnowi,
                         tillnowj,
                         this.row_arr[i],

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\HARSH\\training\\zeustraining\\task6\\TodoApi\\TodoApi.csproj": {}
+    "d:\\HARSH\\training\\zeustraining\\task6\\TodoApi\\TodoApi.csproj": {}
   },
   "projects": {
-    "D:\\HARSH\\training\\zeustraining\\task6\\TodoApi\\TodoApi.csproj": {
+    "d:\\HARSH\\training\\zeustraining\\task6\\TodoApi\\TodoApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\HARSH\\training\\zeustraining\\task6\\TodoApi\\TodoApi.csproj",
+        "projectUniqueName": "d:\\HARSH\\training\\zeustraining\\task6\\TodoApi\\TodoApi.csproj",
         "projectName": "TodoApi",
-        "projectPath": "D:\\HARSH\\training\\zeustraining\\task6\\TodoApi\\TodoApi.csproj",
+        "projectPath": "d:\\HARSH\\training\\zeustraining\\task6\\TodoApi\\TodoApi.csproj",
         "packagesPath": "C:\\Users\\harshkumar.devmurari\\.nuget\\packages\\",
-        "outputPath": "D:\\HARSH\\training\\zeustraining\\task6\\TodoApi\\obj\\",
+        "outputPath": "d:\\HARSH\\training\\zeustraining\\task6\\TodoApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\harshkumar.devmurari\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -43,6 +43,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.35, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",

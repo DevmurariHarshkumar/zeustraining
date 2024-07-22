@@ -1,4 +1,46 @@
 import { Table } from "./table.js";
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+var apidata;
+
+const apiUrl = 'http://localhost:5205/api/getdb/';
+const outputElement = document.getElementById('output');
+
+
+
+async function fetchData(){
+    try{
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    apidata = data;
+    apidata = data.map(data => Object.values(data));
+    console.log("apidata", apidata[0][1]);
+    }
+    catch(error)
+    {
+        console.log(error);
+    }
+    
+// fetch(apiUrl)
+// .then(response => {
+//     if (!response.ok) {
+//     throw new Error('Network response was not ok');
+//     }
+//     return response.json();
+// })
+// .then(data => {
+//     // Display data in an HTML element
+//     apidata = data;
+//     apidata = data.map(data => Object.values(data));
+//     console.log("apidata", apidata[0][1]);
+//     // outputElement.textContent = JSON.stringify(data, null, 2);
+// })
+// .catch(error => {
+//     console.error('Error:', error);
+// });
+}
+
+
 var canvas = document.querySelector("canvas");
 
 // canvas.width = window.innerWidth;
@@ -9,15 +51,17 @@ canvas.height = 4000;
 var c = canvas.getContext("2d");
 console.log(canvas);
 
-var rows = new Array(50).fill(170);
-var cols = new Array(50).fill(30);
-var table = new Table(rows.length, cols.length, rows, cols);
+await fetchData()
+var rows = new Array(apidata[0].length).fill(170);
+var cols = new Array(apidata.length).fill(30);
+var table = new Table(rows.length, cols.length, rows, cols, apidata);
 table.drawTable();
 
 
 // now not useful as multiple area select can do this too....
 var selected_cell = null;
 canvas.addEventListener("click", (event) => {
+    console.log(apidata);
     // rect is for considering movement by canvas moving and not just screen absolute position
     let rect = canvas.getBoundingClientRect();
     let x_position = event.clientX - rect.left;
@@ -205,8 +249,8 @@ canvas.addEventListener("mousedown", (event) => {
 canvas.addEventListener("mousemove", (event) => {
     var sum = 0
     var average = 0
-    var minn = 0 // to do max and min 
-    var maxx = 0
+    var minn = Number.POSITIVE_INFINITY; // to do max and min 000
+    var maxx = Number.NEGATIVE_INFINITY;
     if (isMouseDown) {
 		table.drawTable()
         let rect = canvas.getBoundingClientRect();
@@ -224,17 +268,20 @@ canvas.addEventListener("mousemove", (event) => {
             console.log("selectedi ", selectedCells[i])
             sum += selectedCells[i].content;
             average = sum/selectedCells.length;
-            minn = Math.min(minn, selectedCells[i]);
-            maxx = Math.max(maxx, selectedCells[i]);
-            console.log("sum", sum, average, minn, maxx);
-
+            minn = Math.min(minn, selectedCells[i].content);
+            maxx = Math.max(maxx, selectedCells[i].content);
         }
+        console.log("sum", sum, average, minn, maxx);
     }
 });
 
 canvas.addEventListener("mouseup", (event) => {
 	isMouseDown = false;
 });
+
+
+
+
 
 
 

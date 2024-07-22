@@ -13,13 +13,16 @@ using MySql.Data.MySqlClient;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using mmongo;
+using System;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using Dapper;
 
 
 
 
 namespace api.Controllers
 {
-    [Route("[controller]")]
+    [Route("api")]
     [ApiController]
 
     public class UserController(ApplicationDBContext context) : ControllerBase
@@ -74,6 +77,75 @@ namespace api.Controllers
                 return Ok();
             }
             return BadRequest("file process failed");
+        }
+
+
+        [HttpGet("getdb")]
+        public async Task<IActionResult> GetFromDB()
+        {
+
+            // var conString = "Server=127.0.0.1; User ID=root; Password=root; Database=harsh; CharSet=utf8";
+            // StringBuilder sCommand = new StringBuilder("SELECT * FROM user;");
+            // // Console.WriteLine(sCommand);
+            // using (MySqlConnection mConnection = new MySqlConnection(conString))
+            // {
+            //     Console.WriteLine(sCommand);
+            //     using (MySqlCommand myCmd = new MySqlCommand(sCommand.ToString(), mConnection))
+            //     {
+            //         MySqlTransaction myTrans;
+            //         myTrans = mConnection.BeginTransaction();
+            //         myCmd.Connection = mConnection;
+            //         myCmd.Transaction = myTrans;
+            //         myCmd.CommandType = System.Data.CommandType.Text;
+            //         // await myCmd.ExecuteNonQueryAsync();
+            //         myCmd.ExecuteNonQuery();
+            //         myTrans.Commit();
+            //     }
+            // }
+
+
+
+            string connectionString = "Server=127.0.0.1; User ID=root; Password=root; Database=harsh; CharSet=utf8";
+        
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            
+            try
+            {
+                connection.Open();
+                string query = "SELECT * FROM user LIMIT 100";
+                MySqlCommand command = new MySqlCommand(query, connection);
+                // using (MySqlDataReader reader = command.ExecuteReader())
+                // {
+                //     Console.WriteLine("reader......"+ reader);
+                //     while (reader.Read())
+                //     {
+                //         // Example: Accessing data by column name
+                //         string Name = reader.GetString("Name");
+                //         string Email = reader.GetString("Email");
+                //         // return Ok();
+                //         // Console.WriteLine($"Name: {Name}, Email: {Email}");
+                //     }
+                // }
+                command.Connection = connection;
+                List<User> users = (List<User>)await connection.QueryAsync<User>(query);                
+                Console.WriteLine(users);
+                return Ok(users);
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            finally
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                    connection.Close();
+            }
+
+
+            // var x = _context.user;
+            // Console.WriteLine(x);
+            return Ok();
         }
     }
 }
