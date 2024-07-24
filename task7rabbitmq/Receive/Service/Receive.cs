@@ -1,22 +1,15 @@
 using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using Microsoft.EntityFrameworkCore;
 using api.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic.FileIO;
-using MySqlConnector;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
-using System.Data;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
-using Newtonsoft.Json.Serialization;
 using mmongo;
+using log4net;
 
 namespace preprocess{
     public class Processing{
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
         public void AddToQueue2(List<User> userToUpload){
             
             var factory = new ConnectionFactory { HostName = "localhost" };
@@ -58,13 +51,13 @@ namespace preprocess{
             {
                 Console.WriteLine("received in callback func");
                 var fileBytes = ea.Body.ToArray();
-                using MemoryStream memoryStream = new MemoryStream(fileBytes);
-                using StreamReader reader = new StreamReader(memoryStream, Encoding.UTF8);
+                using MemoryStream memoryStream = new(fileBytes);
+                using StreamReader reader = new(memoryStream, Encoding.UTF8);
 
                 var time = new Stopwatch();
                 time.Start();
-                List<User> userToUpload = new List<User>();
-                List<User> userToUpload1 = new List<User>();
+                List<User> userToUpload = [];
+                List<User> userToUpload1 = [];
 
                 int num = 0;
                 int batch_size = 1000;
@@ -78,7 +71,7 @@ namespace preprocess{
                         var fields = line.Split(",");
                         if (DateTime.TryParseExact(fields[8], "yyyy-M-d", null, System.Globalization.DateTimeStyles.None, out DateTime dateOfBirth))
                         {
-                            User user = new User
+                            User user = new()
                             {
                                 Email = fields[0],
                                 Name = fields[1],
@@ -113,7 +106,7 @@ namespace preprocess{
                     }
                     if(num!=0){
                         log.Info("batch uploaded to queue");
-                        Mongo connector = new Mongo();
+                        Mongo connector = new();
                         connector.EstablishMongoConn();
                         AddToQueue2(userToUpload);
                         userToUpload.Clear();

@@ -12,7 +12,6 @@ async function fetchData(){
     const data = await response.json();
     apidata = data;
     apidata = data.map(data => Object.values(data));
-    console.log("apidata", apidata[0][1]);
     }
     catch(error)
     {
@@ -31,24 +30,26 @@ canvas.height = 4000;
 var c = canvas.getContext("2d");
 
 try{
-    await fetchData()
+    await fetchData();
 }
 catch{
     console.log("internal server error");
 }
+
 var rows = new Array(apidata[0].length).fill(130);
 var cols = new Array(apidata.length).fill(19);
 var table = new Table(rows.length, cols.length, rows, cols, apidata);
+
+table.make2darray();
 table.drawTable();
 
 
 var selected_cell = null;
 canvas.addEventListener("click", (event) => {
-    console.log(apidata);
     let rect = canvas.getBoundingClientRect();
     let x_position = event.clientX - rect.left;
     let y_position = event.clientY - rect.top;
-    console.log("pixel_pos", x_position, y_position);
+    // console.log("pixel_pos", x_position, y_position);
     var cell = getCellFromClick(x_position, y_position);
     selected_cell = cell;
     drawSelectedCell(cell);
@@ -65,7 +66,7 @@ function getCellFromClick(x, y) {
                 y >= cell.y_px &&
                 y <= cell.y_px + cell.height
             ) {
-                console.log("cell_pos", cell.x_pos, cell.y_pos);
+                // console.log("cell_pos", cell.x_pos, cell.y_pos);
                 return cell;
             }
         }
@@ -73,11 +74,9 @@ function getCellFromClick(x, y) {
     return null;
 }
 
-function drawSelectedCell(cell) {
+function drawSelectedCellMain(cell){
     c.strokeStyle = "rgba(5, 96, 242, 1)";
     c.strokeRect(cell.x_px - 1, cell.y_px - 1, cell.width + 2, cell.height + 2);
-    c.strokeRect(cell.x_px - 2, cell.y_px - 2, cell.width + 4, cell.height + 4);
-    c.strokeRect(cell.x_px - 3, cell.y_px - 3, cell.width + 6, cell.height + 6);
     c.fillStyle = "white";
     c.fillRect(cell.x_px + 1, cell.y_px + 1, cell.width - 2, cell.height - 2);
     c.fillStyle = "black";
@@ -92,12 +91,14 @@ function drawSelectedCell(cell) {
         cell.width
     );
     c.beginPath()
-    c.arc((cell.x_px+cell.width), (cell.y_px+cell.height), 6, 0, 2 * Math.PI);
+    c.arc((cell.x_px+cell.width), (cell.y_px+cell.height), 3, 0, 2 * Math.PI);
     c.fillStyle = "rgba(5, 96, 242, 1)";
     c.fill()
     c.stroke();
-    
+}
 
+function drawSelectedCellIndexes(cell){
+    
     var headercell = table.table[0][cell.y_pos];
     c. fillStyle = "rgba(0, 120, 215, 0.3)"
     
@@ -117,8 +118,17 @@ function drawSelectedCell(cell) {
     );
 }
 
+
+function drawSelectedCell(cell) {
+    drawSelectedCellMain(cell);
+    drawSelectedCellIndexes(table.table[0][cell.y_pos]);
+    drawSelectedCellIndexes(table.table[cell.x_pos][0]);
+
+
+
+}
+
 canvas.addEventListener("dblclick", (event) => {
-    console.log("dblclick");
     let rect = canvas.getBoundingClientRect();
     let x_position = event.clientX - rect.left;
     let y_position = event.clientY - rect.top;
@@ -129,7 +139,6 @@ canvas.addEventListener("dblclick", (event) => {
 
 window.addEventListener("keydown", (event) => {
     table.drawTable()
-    console.log("keydown", event.key);
     if (event.key == "ArrowUp") {
         var nextcell =
             table.table[selected_cell.x_pos][selected_cell.y_pos - 1];
@@ -149,8 +158,7 @@ window.addEventListener("keydown", (event) => {
         selected_cell = nextcell;
     }
     if (event.key == "ArrowRight") {
-        var nextcell =
-            table.table[selected_cell.x_pos + 1][selected_cell.y_pos];
+        var nextcell = table.table[selected_cell.x_pos + 1][selected_cell.y_pos];
         drawSelectedCell(nextcell);
         selected_cell = nextcell;
     }
@@ -172,7 +180,6 @@ function getSelectedCells(initialCell, finalCell) {
 	for (let i = startX; i <= endX; i++) {
 		for (let j = startY; j <= endY; j++) {
 			selectedCells.push(table.table[i][j]);
-			console.log(table.table[i][j]);
 		}
 	}
 	return selectedCells;
@@ -186,11 +193,9 @@ canvas.addEventListener("mousedown", (event) => {
     let y_position = event.clientY - rect.top;
     initialCell = getCellFromClick(x_position, y_position);
     selected_cell = initialCell;
-    console.log("dsfafasdf", initialCell)
     if (initialCell) {
         isMouseDown = true;
         selectedCells = [initialCell];
-		console.log("selectedCells: ", selectedCells)
 		selectedCells.forEach((cell, i) => {
 			drawSelectedCell(cell);
 		})
@@ -209,15 +214,12 @@ canvas.addEventListener("mousemove", (event) => {
         let x_position = event.clientX - rect.left;
         let y_position = event.clientY - rect.top;
         finalCell = getCellFromClick(x_position, y_position);
-		console.log("finalcell in mousemove: ", initialCell, finalCell);
 		selectedCells = getSelectedCells(initialCell, finalCell);
-		console.log("selectedCells: ", selectedCells)
 		selectedCells.forEach((cell, i) => {
 		drawSelectedCell(cell);
 		})
 
         for(var i = 0; i < selectedCells.length; i++){
-            console.log("selectedi ", selectedCells[i])
             sum += selectedCells[i].content;
             average = sum/selectedCells.length;
             minn = Math.min(minn, selectedCells[i].content);

@@ -15,11 +15,11 @@ namespace preprocess{
     public class Program(){
         public static void Main()
         {
-            Console.WriteLine("receiver online");
-            Processing obj = new Processing();
+            Console.WriteLine("second receiver online");
+            Processing obj = new();
             var x = obj.FastestUpload();
             if (x != null){
-                Mongo connector = new Mongo();
+                Mongo connector = new();
                 connector.EstablishMongoConn();
             }
             Console.WriteLine("end of program.cs");

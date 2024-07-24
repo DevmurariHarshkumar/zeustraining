@@ -37,15 +37,15 @@ namespace dbupload
                 Console.WriteLine("batch received in callback func");
                 watch.Start();
 
-                List<User> userToUpload = new List<User>();
-                List<User> userToUpload1 = new List<User>();
+                List<User> userToUpload = [];
+                List<User> userToUpload1 = [];
 
                 var fileBytes = ea.Body.ToArray();
                 var batch = Encoding.UTF8.GetString(fileBytes);
                 userToUpload = JsonSerializer.Deserialize<List<User>>(batch)!;
 
-                StringBuilder sCommand = new StringBuilder("REPLACE INTO user (Email, Name, Country, State, City, Tno, A1, A2, DOB, GS1920, GS2021, GS2122, GS2223, GS2324) VALUES ");
-                List<string> Rows = new List<string>();
+                StringBuilder sCommand = new("REPLACE INTO user (Email, Name, Country, State, City, Tno, A1, A2, DOB, GS1920, GS2021, GS2122, GS2223, GS2324) VALUES ");
+                List<string> Rows = [];
                 for (int i = 0; i < userToUpload?.Count; i++)
                 {
                     Rows.Add(string.Format("('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}', {9}, {10}, {11}, {12}, {13})",
@@ -69,7 +69,7 @@ namespace dbupload
 
                 var myConnString = "Server=127.0.0.1; User ID=root; Password=root; Database=harsh; CharSet=utf8";
 
-                MySqlConnection myConnection = new MySqlConnection(myConnString);
+                MySqlConnection myConnection = new(myConnString);
                 myConnection.Open();
                 MySqlCommand myCommand = myConnection.CreateCommand();
                 MySqlTransaction myTrans;

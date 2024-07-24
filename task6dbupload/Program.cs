@@ -15,8 +15,12 @@ namespace dbupload{
         public static void Main(string[] args){
             Console.WriteLine("dbupload receiver online...");
 
-            FastestUpload dbUpload = new FastestUpload();
+            FastestUpload dbUpload = new();
             var x = dbUpload.UploadToDb();
+            if (x != null){
+                Mongo connector = new();
+                connector.EstablishMongoConn();
+            }
         }
     }
 }

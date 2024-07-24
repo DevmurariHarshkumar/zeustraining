@@ -12,9 +12,9 @@ class Cell {
     }
 
     drawCell() {
-        c.clearRect(this.x_px,this.y_px,this.width,this.height);
-        c.strokeStyle = "rgba(153, 151, 151,0.3)";
-        c.strokeRect(this.x_px, this.y_px, this.width, this.height);
+        // c.clearRect(this.x_px,this.y_px,this.width,this.height);
+        // c.strokeStyle = "rgba(153, 151, 151,0.3)";
+        // c.strokeRect(this.x_px, this.y_px, this.width, this.height);
         c.fillStyle = "black";
         c.font = "11px serif";
         c.textAlign = "center";
@@ -27,7 +27,6 @@ class Cell {
             this.width
         );
     }
-
 }
 
 export { Cell };

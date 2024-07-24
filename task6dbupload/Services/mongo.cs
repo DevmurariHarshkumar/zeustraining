@@ -9,7 +9,7 @@ using log4net;
 namespace mmongo{
     public class Mongo
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
 
         public async void EstablishMongoConn()
         {
@@ -41,7 +41,6 @@ namespace mmongo{
                 await collection.InsertOneAsync(bsonDoc);
                 
                 log.Info("mongo db insertion done.");
-
         }
     }
 }
