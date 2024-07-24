@@ -4,16 +4,14 @@ using RabbitMQ.Client.Events;
 using MySqlConnector;
 using System.Text.Json;
 using api.Models;
-using mmongo;
-using MongoDB.Driver;
-using MongoDB.Bson;
+using log4net;
 
 
 namespace dbupload
 {
     public class FastestUpload
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
 
         public string UploadToDb()
         {

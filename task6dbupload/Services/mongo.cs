@@ -1,19 +1,15 @@
-using System.Text;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using MySqlConnector;
-using System.Text.Json;
 using api.Models;
 
 using MongoDB.Driver;
 using MongoDB.Bson;
+using log4net;
 [assembly: log4net.Config.XmlConfigurator(Watch=true)]
 
 
 namespace mmongo{
     public class Mongo
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
 
         public async void EstablishMongoConn()
         {
@@ -37,12 +33,12 @@ namespace mmongo{
                     CurrentStatus = "DB UPLOAD DONE"
                 };
 
-                BsonDocument bsonDoc = new BsonDocument
+                BsonDocument bsonDoc = new()
                 {
                     { "Name", BsonString.Create(newlogging.CurrentStatus) }
                 };
                 // await collection.InsertOneAsync(bsonDoc);
-                collection.InsertOne(bsonDoc);
+                await collection.InsertOneAsync(bsonDoc);
                 
                 log.Info("mongo db insertion done.");
 

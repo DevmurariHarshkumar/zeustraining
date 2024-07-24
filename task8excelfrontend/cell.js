@@ -1,4 +1,4 @@
-import { c } from "./canvas.js";
+import { c } from "./index.js";
 
 class Cell {
     constructor(content, x_px, y_px, width = 150, height = 50, x_pos, y_pos) {
@@ -16,7 +16,7 @@ class Cell {
         c.strokeStyle = "rgba(153, 151, 151,0.3)";
         c.strokeRect(this.x_px, this.y_px, this.width, this.height);
         c.fillStyle = "black";
-        c.font = "18px serif";
+        c.font = "11px serif";
         c.textAlign = "center";
         c.textBaseline = "middle";
         c.textRendering = "auto";
@@ -29,7 +29,5 @@ class Cell {
     }
 
 }
-
-// would be useful while scrolling ctx.clearRect(10, 10, 120, 100);
 
 export { Cell };

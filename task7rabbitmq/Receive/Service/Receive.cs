@@ -135,7 +135,7 @@ namespace preprocess{
             Console.WriteLine(" Press [enter] to exit.");
             Console.ReadLine();
 
-            return "CSV file uploaded and processed successfully.";
+            return "CSV file uploaded to backend and processed successfully.";
         }
     }
 }

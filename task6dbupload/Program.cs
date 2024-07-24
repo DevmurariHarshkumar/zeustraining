@@ -13,12 +13,10 @@ using mmongo;
 namespace dbupload{
     public class Program(){
         public static void Main(string[] args){
-            Console.WriteLine("receiver online...");
+            Console.WriteLine("dbupload receiver online...");
 
             FastestUpload dbUpload = new FastestUpload();
             var x = dbUpload.UploadToDb();
-
-            Console.WriteLine("program.cs end");
         }
     }
 }

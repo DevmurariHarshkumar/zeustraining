@@ -40,8 +40,8 @@ namespace mmongo{
                 {
                     { "Name", BsonString.Create(newlogging.CurrentStatus) }
                 };
-                // await collection.InsertOneAsync(bsonDoc);
-                collection.InsertOne(bsonDoc);
+                await collection.InsertOneAsync(bsonDoc);
+                // collection.InsertOne(bsonDoc);
                 
                 log.Info("mongo db insertion done.");
 

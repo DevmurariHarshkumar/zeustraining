@@ -1,4 +1,4 @@
-import { c } from "./canvas.js";
+import { c } from "./index.js";
 import { Cell } from "./cell.js";
 class Table {
     constructor(
@@ -17,24 +17,6 @@ class Table {
     }
 
     drawTable() {
-        // INDIVIDIAL INITIAL INDEXING ROW AND COLUMN
-        // let tillnowi = this.row_arr[0];
-        // for (let j = 0; j <= this.row_arr.length; j++) {
-        //     const content = String.fromCharCode(65 + j); // A == 65 ins ascii
-        //     this.table[0][j] = new Cell(content, tillnowi, 0, this.row_arr[0], 50, 0, j);
-        //     var cell = this.table[0][j];
-        //     cell.drawCell();
-        //     tillnowi += this.row_arr[0];
-        // }
-
-        // let tillnowj = this.col_arr[0];
-        // for (let i = 1; i < this.col_arr.length; i++) {
-        //     const content = j.toString();
-        //     this.table[i][0] = new Cell(content, 0, tillnowj, 150, this.col_arr[0], i, 0);
-        //     var cell = this.table[i][0];
-        //     cell.drawCell();
-        //     tillnowj += this.col_arr[0];
-        // }
         c.clearRect(0,0,8000,8000);
 
         var tillnowi = 0;
@@ -77,7 +59,6 @@ class Table {
                 }
                 else{
                     this.table[i][j] = new Cell(
-                        // [i + " " + j],
                         this.content[j][i],
                         tillnowi,
                         tillnowj,
