@@ -93,7 +93,7 @@ class Table {
 
     drawTable() {
         c.clearRect(0,0,8000,8000);
-        this.drawGrid()
+        this.drawGrid();
 
         var tillnowi = 0;
         for (var i = 0; i < this.row_arr.length; i++) {
