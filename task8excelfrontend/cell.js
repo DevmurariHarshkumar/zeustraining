@@ -59,10 +59,11 @@ function getCellFromClick(x, y) {
 }
 
 function drawSelectedCellMain(cell){
-    c.strokeStyle = "rgba(5, 96, 242, 1)";
-    c.strokeRect(cell.x_px - 1, cell.y_px - 1, cell.width + 2, cell.height + 2);
     c.fillStyle = "white";
-    c.fillRect(cell.x_px + 1, cell.y_px + 1, cell.width - 2, cell.height - 2);
+    c.fillRect(cell.x_px+2, cell.y_px+2, cell.width-2, cell.height-2);
+    c.strokeStyle = "#1A73E8";
+    c.strokeRect(cell.x_px+1, cell.y_px+1, cell.width-1, cell.height-1);
+    c.strokeRect(cell.x_px+1, cell.y_px+1, cell.width-1, cell.height-1);
     c.fillStyle = "black";
     c.font = "11px serif";
     c.textAlign = "center";
@@ -76,15 +77,13 @@ function drawSelectedCellMain(cell){
     );
     c.beginPath()
     c.arc((cell.x_px+cell.width), (cell.y_px+cell.height), 3, 0, 2 * Math.PI);
-    c.fillStyle = "rgba(5, 96, 242, 1)";
+    c.fillStyle = "blue";
     c.fill()
-    c.stroke();
-    drawSelectedCellIndexes(cell);
 }
 
 function drawSelectedCellIndexes(cell){
     c.fillStyle = "white";
-    c.fillRect(cell.x_px + 1, cell.y_px + 1, cell.width - 2, cell.height - 2);
+    c.fillRect(cell.x_px+2, cell.y_px+2, cell.width-2, cell.height-2);
     c.fillStyle = "black";
     c.font = "11px serif";
     c.textAlign = "center";
@@ -98,10 +97,10 @@ function drawSelectedCellIndexes(cell){
     );
     c. fillStyle = "rgba(0, 120, 215, 0.3)"
     c.fillRect(
-        cell.x_px + 1,
-        cell.y_px + 1,
-        cell.width - 2,
-        cell.height - 2
+        cell.x_px + 0.25,
+        cell.y_px + 0.25,
+        cell.width - 1.5,
+        cell.height - 1.5
     );
 }
 

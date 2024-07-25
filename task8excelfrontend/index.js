@@ -11,10 +11,10 @@ import {
 
 var canvas = document.querySelector("canvas");
 
-// canvas.width = window.innerWidth;
-// canvas.height = window.innerHeight;
-canvas.width = 4000;
-canvas.height = 4000;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+// canvas.width = 4000;
+// canvas.height = 4000;
 
 var c = canvas.getContext("2d");
 
@@ -42,17 +42,18 @@ canvas.addEventListener("dblclick", (event) => {
     var cell = getCellFromClick(x_position, y_position);
     selected_cell = cell;
     c.fillStyle = "white";
-    c.fillRect(cell.x_px + 1, cell.y_px + 1, cell.width - 2, cell.height - 2);
+    c.fillRect(cell.x_px+2, cell.y_px+2, cell.width-5, cell.height-5);
     const input = document.createElement("input");
     input.type = "text";
+    input.defaultValue = "asdfdfsdafasdfdsf";
     input.style.position = "absolute";
-    input.style.left = `${cell.x_px + 1}px`; // + this.canvas.offsetLeft+1
-    input.style.top = `${cell.y_px + 1}px`; //  + this.canvas.offsetTop+1
-    input.style.width = `${cell.width - 6}px`;
-    input.style.height = `${cell.height - 5}px`;
-    console.log("ell info", cell.x_px, cell.y_px, cell.width, cell.height);
+    input.style.left = `${cell.x_px + 3}px`; // + this.canvas.offsetLeft+1
+    input.style.top = `${cell.y_px + 3}px`; //  + this.canvas.offsetTop+1
+    input.style.width = `${cell.width - 10}px`;
+    input.style.height = `${cell.height - 10}px`;
+    console.log("cell info", cell.x_px, cell.y_px, cell.width, cell.height);
     input.style.outline = 'none'
-    input.style.border = "0px solid red";
+    input.style.border = "0px";
 
     input.value = cell.content[`${cell.x_pos},${cell.y_pos}`] || "";
     document.body.appendChild(input);
@@ -129,7 +130,7 @@ canvas.addEventListener("mousemove", (event) => {
         finalCell = getCellFromClick(x_position, y_position);
         selectedCells = getSelectedCells(initialCell, finalCell);
         selectedCells.forEach((cell, i) => {
-            drawSelectedCell(cell);
+            drawSelectedCellIndexes(cell);
         });
 
         for (var i = 0; i < selectedCells.length; i++) {

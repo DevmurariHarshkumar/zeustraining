@@ -1,5 +1,7 @@
 import { c } from "./index.js";
 import { Cell } from "./cell.js";
+
+var line_width = 0.5;
 class Table {
     constructor(
         no_row,
@@ -24,7 +26,20 @@ class Table {
             var tillnowj = 0;
             for (var j = 0; j < this.col_arr.length; j++) {
                 if (i == 0 || j == 0){
-                    if (i == 0){
+                    if (i == 0 && j == 0){
+                        const content = "";
+                        this.table[i][j] = new Cell(
+                            content,
+                            tillnowi,
+                            tillnowj,
+                            this.row_arr[i],
+                            this.col_arr[j],
+                            i,
+                            j
+                        );
+                        tillnowj = tillnowj + this.col_arr[j];
+                    }
+                    else if (i == 0){
                         const content = (j).toString();
                         this.table[i][j] = new Cell(
                             content,
@@ -74,8 +89,9 @@ class Table {
         var tillnowi = 0
         for(var i = 0; i < this.no_row; i++){
             c.beginPath();
-            c.moveTo(tillnowi, 0);
-            c.lineTo(tillnowi, 1000);
+            c.moveTo(tillnowi+0.5, 0);
+            c.lineTo(tillnowi+0.5, window.innerHeight);
+            c.lineWidth = line_width;
             c.strokeStyle = "black";
             c.stroke();
             tillnowi += this.row_arr[i];
@@ -83,9 +99,10 @@ class Table {
         var tillnowj = 0
         for(var i = 0; i < this.no_col; i++){
             c.beginPath();
-            c.moveTo(0, tillnowj);
-            c.lineTo(10000, tillnowj);
+            c.moveTo(0, tillnowj+0.5);
+            c.lineTo(window.innerWidth, tillnowj+0.5);
             c.strokeStyle = "black";
+            c.lineWidth = line_width;
             c.stroke();
             tillnowj += this.col_arr[i];
         }
@@ -100,14 +117,19 @@ class Table {
             var tillnowj = 0;
             for (var j = 0; j < this.col_arr.length; j++) {
                 if (i == 0 || j == 0){
-                    if (i == 0){
-                        const content = (j).toString();
+                    if (i == 0 && j == 0){
+                        const content = "null";
+                        var cellnew = this.table[i][j];
+                        cellnew.drawCell();
+                        tillnowj = tillnowj + this.col_arr[j];
+                        continue;
+                    }
+                    else if (i == 0){
                         var cellnew = this.table[i][j];
                         cellnew.drawCell();
                         tillnowj = tillnowj + this.col_arr[j];
                     }
                     else if(j == 0){
-                        const content = String.fromCharCode(65 + i-1); // A == 65 ins ascii
                         var cellnew = this.table[i][j];
                         cellnew.drawCell();
                         tillnowj = tillnowj + this.col_arr[j];
