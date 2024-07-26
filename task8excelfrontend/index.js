@@ -101,20 +101,31 @@ window.addEventListener("keydown", (event) => {
     }
 });
 
-function selectWholeLine(cell){
-    console.log(cell);
-    if (cell.x_pos == 0){
-        for (var i = 1; i < table.row_arr.length; i++){
-            cell = table.table[i][cell.y_pos];
-            drawSelectedCell(cell)
+function selectWholeLine(cells){
+    console.log(cells);
+    cells.forEach((cell) => {
+        if (cell.x_pos == 0){
+            for (var i = 0; i < table.row_arr.length; i++){
+                cell = table.table[i][cell.y_pos];
+                if (!selectedCells.includes(cell) && (cell.x_pos != 0 || cell.y_pos != 0)) {
+                    selectedCells.push(cell);
+                }
+                drawSelectedCellIndexes(cell)
+            }
         }
-    }
-    if (cell.y_pos == 0){
-        for (var i = 1; i < table.col_arr.length; i++){
-            cell = table.table[cell.x_pos][i];
-            drawSelectedCell(cell);
+        if (cell.y_pos == 0){
+            for (var i = 0; i < table.col_arr.length; i++){
+                cell = table.table[cell.x_pos][i];
+                if (!selectedCells.includes(cell)) {
+                    selectedCells.push(cell);
+                }
+                drawSelectedCellIndexes(cell);
+            }
         }
-    }
+    });
+    // for (cell in cells){
+        
+    // }
 }
 
 canvas.addEventListener("mousedown", (event) => {
@@ -126,14 +137,14 @@ canvas.addEventListener("mousedown", (event) => {
     initialCell = getCellFromClick(x_position, y_position);
 
     if (initialCell.x_pos == 0 || initialCell.y_pos == 0){
-        selectWholeLine(initialCell);
+        selectWholeLine([initialCell]);
     }
 
     selected_cell = initialCell;
     if (initialCell) {
         isMouseDown = true;
         selectedCells = [initialCell];
-        selectedCells.forEach((cell, i) => {
+        selectedCells.forEach((cell) => {
             drawSelectedCell(cell);
         });
     }
@@ -150,13 +161,20 @@ canvas.addEventListener("mousemove", (event) => {
         let x_position = event.clientX - rect.left;
         let y_position = event.clientY - rect.top;
         finalCell = getCellFromClick(x_position, y_position);
+
         selectedCells = getSelectedCells(initialCell, finalCell);
-        selectedCells.forEach((cell, i) => {
+        if (finalCell.x_pos == 0 || finalCell.y_pos == 0){
+            selectWholeLine(selectedCells);
+        }
+        selectedCells.forEach((cell) => {
             drawSelectedCellIndexes(cell);
         });
+        
 
         for (var i = 0; i < selectedCells.length; i++) {
-            sum += selectedCells[i].content;
+            if (!isNaN(parseFloat(selectedCells[i].content))){
+                sum += parseFloat(selectedCells[i].content)
+            }
             average = sum / selectedCells.length;
             minn = Math.min(minn, selectedCells[i].content);
             maxx = Math.max(maxx, selectedCells[i].content);
