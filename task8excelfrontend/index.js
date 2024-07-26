@@ -19,6 +19,7 @@ canvas.height = window.innerHeight;
 var c = canvas.getContext("2d");
 
 var rows = new Array(apidata[0].length).fill(130);
+rows[0] = 21;
 var cols = new Array(apidata.length).fill(19);
 var table = new Table(rows.length, cols.length, rows, cols, apidata);
 
@@ -27,13 +28,13 @@ table.drawTable();
 
 var selected_cell, selectedCells, isMouseDown, initialCell, finalCell;
 
-canvas.addEventListener("click", (event) => {
-    let rect = canvas.getBoundingClientRect();
-    let x_position = event.clientX - rect.left;
-    let y_position = event.clientY - rect.top;
-    var cell = getCellFromClick(x_position, y_position);
-    drawSelectedCell(cell);
-});
+// canvas.addEventListener("click", (event) => {
+//     let rect = canvas.getBoundingClientRect();
+//     let x_position = event.clientX - rect.left;
+//     let y_position = event.clientY - rect.top;
+//     var cell = getCellFromClick(x_position, y_position);
+//     drawSelectedCell(cell);
+// });
 
 canvas.addEventListener("dblclick", (event) => {
     let rect = canvas.getBoundingClientRect();
@@ -47,8 +48,8 @@ canvas.addEventListener("dblclick", (event) => {
     input.type = "text";
     input.defaultValue = "asdfdfsdafasdfdsf";
     input.style.position = "absolute";
-    input.style.left = `${cell.x_px + 3}px`; // + this.canvas.offsetLeft+1
-    input.style.top = `${cell.y_px + 3}px`; //  + this.canvas.offsetTop+1
+    input.style.left = `${cell.x_px + 3}px`;
+    input.style.top = `${cell.y_px + 3}px`;
     input.style.width = `${cell.width - 10}px`;
     input.style.height = `${cell.height - 10}px`;
     console.log("cell info", cell.x_px, cell.y_px, cell.width, cell.height);
@@ -100,6 +101,22 @@ window.addEventListener("keydown", (event) => {
     }
 });
 
+function selectWholeLine(cell){
+    console.log(cell);
+    if (cell.x_pos == 0){
+        for (var i = 1; i < table.row_arr.length; i++){
+            cell = table.table[i][cell.y_pos];
+            drawSelectedCell(cell)
+        }
+    }
+    if (cell.y_pos == 0){
+        for (var i = 1; i < table.col_arr.length; i++){
+            cell = table.table[cell.x_pos][i];
+            drawSelectedCell(cell);
+        }
+    }
+}
+
 canvas.addEventListener("mousedown", (event) => {
     table.drawTable();
     selectedCells = [];
@@ -107,6 +124,11 @@ canvas.addEventListener("mousedown", (event) => {
     let x_position = event.clientX - rect.left;
     let y_position = event.clientY - rect.top;
     initialCell = getCellFromClick(x_position, y_position);
+
+    if (initialCell.x_pos == 0 || initialCell.y_pos == 0){
+        selectWholeLine(initialCell);
+    }
+
     selected_cell = initialCell;
     if (initialCell) {
         isMouseDown = true;
