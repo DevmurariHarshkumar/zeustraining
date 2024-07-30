@@ -67,9 +67,13 @@ canvas.addEventListener("dblclick", (event) => {
     input.focus();
     const saveInput = () => {
         cell.content = input.value;
+        apidata[cell.y_pos][cell.x_pos] = input.value;
         document.body.removeChild(input);
         table.drawTable();
     };
+    console.log(table.table[cell.x_pos][cell.y_pos]);
+    console.log("input.value", input.value);
+    table.drawTable();
 
     input.addEventListener("blur", saveInput);
     input.addEventListener("keydown", (e) => {
