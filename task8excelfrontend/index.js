@@ -25,12 +25,12 @@ var cols = new Array(apidata.length).fill(19);
 var table = new Table(rows.length, cols.length, rows, cols, apidata);
 var isResizeEdge;
 var edge;
-var initial_x_position;
-var initial_y_position;
-var new_x_position;
-var new_y_position;
-var initial_width;
-var initial_height;
+var initial_x_position = 0;
+var initial_y_position = 0;
+var new_x_position = 0;
+var new_y_position = 0;
+var initial_width = 0;
+var initial_height = 0;
 
 table.make2darray();
 table.drawTable();
@@ -108,24 +108,33 @@ window.addEventListener("keydown", (event) => {
 });
 
 function resizeLine(edge, initial_x_position, initial_y_position, new_x_position, new_y_position){
-    console.log("INSIDE RESIZELINE........")
-    console.log("edge: ",edge)
-    console.log("new x y pos: ", initial_x_position, initial_y_position, new_x_position, new_y_position);
-    var new_height = initial_width + new_y_position - initial_y_position;
     var new_width = initial_width + new_x_position - initial_x_position;
     rows[edge-1] = new_width;
-    console.log("newwidth: ", new_width)
-    table.drawTable()
+}
+function resizeLiney(edge, initial_x_position, initial_y_position, new_x_position, new_y_position){
+    var new_height = initial_height + new_y_position - initial_y_position;
+    cols[edge-1] = new_height;
 }
 
-function nearEdge(x_position){
+function nearEdgex(x_position){
     var rowtillnow = 0;
     for (var i=0; i<rows.length; i++){
         console.log("absolute: ", Math.abs(rowtillnow - x_position),"xpos", x_position);
-        if (Math.abs(rowtillnow - x_position) < 10){
+        if (Math.abs(rowtillnow - x_position) < 5){
             return i;
         }
         rowtillnow += rows[i]
+    }
+    return 0;
+}
+function nearEdgey(y_position){
+    var coltillnow = 0;
+    for (var j=0; j<cols.length; j++){
+        console.log("absolute: ", Math.abs(coltillnow - y_position),"ypos", y_position);
+        if (Math.abs(coltillnow - y_position) < 5){
+            return j;
+        }
+        coltillnow += cols[j]
     }
     return 0;
 }
@@ -140,13 +149,25 @@ canvas.addEventListener("mousedown", (event) => {
     initialCell = getCellFromClick(x_position, y_position);
 
     if (initialCell.x_pos == 0 || initialCell.y_pos == 0){
-        edge = nearEdge(x_position)
-        if (edge){
-            initial_width = rows[edge-1]
-            initial_height = cols[edge]-1
-            initial_x_position = event.clientX - rect.left;
-            initial_y_position = event.clientY - rect.top;
-            isResizeEdge = true;
+        if (initialCell.y_pos == 0){
+            edge = nearEdgex(x_position)
+            if (edge){
+                initial_width = rows[edge-1]
+                initial_height = cols[edge]-1
+                initial_x_position = event.clientX - rect.left;
+                initial_y_position = event.clientY - rect.top;
+                isResizeEdge = true;
+            }
+        }
+        if (initialCell.x_pos == 0){
+            edge = nearEdgey(y_position)
+            if (edge){
+                initial_width = rows[edge-1]
+                initial_height = cols[edge]-1
+                initial_x_position = event.clientX - rect.left;
+                initial_y_position = event.clientY - rect.top;
+                isResizeEdge = true;
+            }
         }
         else{
             selectWholeLine([initialCell]);
@@ -173,8 +194,17 @@ canvas.addEventListener("mousemove", (event) => {
             let rect = canvas.getBoundingClientRect();
             let new_x_position = event.clientX - rect.left;
             let new_y_position = event.clientY - rect.top;
-            resizeLine(edge, initial_x_position, initial_y_position, new_x_position, new_y_position);
+            initialCell = getCellFromClick(new_x_position, new_y_position);
+            if (initialCell.x_pos == 0 || initialCell.y_pos == 0){
+                if (initialCell.y_pos == 0){
+                    resizeLine(edge, initial_x_position, initial_y_position, new_x_position, new_y_position);
+                }
+                if (initialCell.x_pos == 0){
+                    resizeLiney(edge, initial_x_position, initial_y_position, new_x_position, new_y_position);
+                }
+            }
         }
+    
         table.drawTable();
         let rect = canvas.getBoundingClientRect();
         let x_position = event.clientX - rect.left;
@@ -198,18 +228,18 @@ canvas.addEventListener("mousemove", (event) => {
             maxx = Math.max(maxx, selectedCells[i].content);
         }
         console.log("sum", sum, "average", average, "minn", minn, "maxx", maxx);
-    }
-});
+    }});
 
 canvas.addEventListener("mouseup", (event) => {
     isMouseDown = false;
     initial_y_position = 0;
-    var initial_x_position = 0;
-    var initial_x_position = 0;
-    var new_x_position = 0;
-    var new_y_position = 0;
-    var initial_width = 0;
-    var initial_height = 0;
+    initial_x_position = 0;
+    initial_x_position = 0;
+    new_x_position = 0;
+    new_y_position = 0;
+    initial_width = 0;
+    initial_height = 0;
+    isResizeEdge = false;
 });
 
 export { c, table};
