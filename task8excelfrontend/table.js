@@ -1,7 +1,7 @@
 import { c } from "./index.js";
 import { Cell } from "./cell.js";
 
-var line_width = 0.5;
+var line_width = 1;
 class Table {
     constructor(
         no_row,
@@ -106,10 +106,12 @@ class Table {
             c.stroke();
             tillnowj += this.col_arr[i];
         }
+        // requestAnimationFrame(this.drawGrid)
     }
 
     drawTable() {
         c.clearRect(0,0,8000,8000);
+        this.make2darray()
         this.drawGrid();
 
         var tillnowi = 0;
@@ -143,6 +145,7 @@ class Table {
             }
             tillnowi = tillnowi + this.row_arr[i];
         }
+        // requestAnimationFrame(this.drawTable)
     }
 }
 

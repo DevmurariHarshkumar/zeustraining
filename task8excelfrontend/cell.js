@@ -1,5 +1,4 @@
-import { c } from "./index.js";
-import { table } from "./index.js";
+import { c, table } from "./index.js";
 
 class Cell {
     constructor(content, x_px, y_px, width = 150, height = 50, x_pos, y_pos) {
@@ -58,7 +57,8 @@ function getCellFromClick(x, y) {
     return null;
 }
 
-function drawSelectedCellMain(cell){
+
+function updateSelectedCellMain(cell){
     c.fillStyle = "white";
     c.fillRect(cell.x_px+2, cell.y_px+2, cell.width-2, cell.height-2);
     c.strokeStyle = "#1A73E8";
@@ -75,6 +75,16 @@ function drawSelectedCellMain(cell){
         cell.y_px + cell.height / 2,
         cell.width
     );
+    c.beginPath()
+    c.arc((cell.x_px+cell.width), (cell.y_px+cell.height), 3, 0, 2 * Math.PI);
+    c.fillStyle = "blue";
+    c.fill()
+}
+
+function drawSelectedCellMain(cell){
+    c.strokeStyle = "#1A73E8";
+    c.strokeRect(cell.x_px+1, cell.y_px+1, cell.width-1, cell.height-1);
+    c.strokeRect(cell.x_px+1, cell.y_px+1, cell.width-1, cell.height-1);
     c.beginPath()
     c.arc((cell.x_px+cell.width), (cell.y_px+cell.height), 3, 0, 2 * Math.PI);
     c.fillStyle = "blue";
@@ -110,5 +120,28 @@ function drawSelectedCell(cell) {
     drawSelectedCellIndexes(table.table[cell.x_pos][0]);
 }
 
+function selectWholeLine(cells){
+    cells.forEach((cell) => {
+        if (cell.x_pos == 0){
+            for (var i = 0; i < table.row_arr.length; i++){
+                cell = table.table[i][cell.y_pos];
+                if (!cells.includes(cell) && (cell.x_pos != 0 || cell.y_pos != 0)) {
+                    cells.push(cell);
+                }
+                drawSelectedCellIndexes(cell)
+            }
+        }
+        if (cell.y_pos == 0){
+            for (var i = 0; i < table.col_arr.length; i++){
+                cell = table.table[cell.x_pos][i];
+                if (!cells.includes(cell)) {
+                    cells.push(cell);
+                }
+                drawSelectedCellIndexes(cell);
+            }
+        }
+    });
+}
 
-export { Cell, getSelectedCells, getCellFromClick, drawSelectedCellMain, drawSelectedCellIndexes, drawSelectedCell };
+
+export { Cell, getSelectedCells, getCellFromClick, drawSelectedCellMain, drawSelectedCellIndexes, drawSelectedCell, selectWholeLine };

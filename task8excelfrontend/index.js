@@ -7,6 +7,7 @@ import {
     drawSelectedCellMain,
     drawSelectedCellIndexes,
     drawSelectedCell,
+    selectWholeLine
 } from "./cell.js";
 
 var canvas = document.querySelector("canvas");
@@ -22,6 +23,14 @@ var rows = new Array(apidata[0].length).fill(130);
 rows[0] = 21;
 var cols = new Array(apidata.length).fill(19);
 var table = new Table(rows.length, cols.length, rows, cols, apidata);
+var isResizeEdge;
+var edge;
+var initial_x_position;
+var initial_y_position;
+var new_x_position;
+var new_y_position;
+var initial_width;
+var initial_height;
 
 table.make2darray();
 table.drawTable();
@@ -46,17 +55,14 @@ canvas.addEventListener("dblclick", (event) => {
     c.fillRect(cell.x_px+2, cell.y_px+2, cell.width-5, cell.height-5);
     const input = document.createElement("input");
     input.type = "text";
-    input.defaultValue = "asdfdfsdafasdfdsf";
     input.style.position = "absolute";
     input.style.left = `${cell.x_px + 3}px`;
     input.style.top = `${cell.y_px + 3}px`;
     input.style.width = `${cell.width - 10}px`;
     input.style.height = `${cell.height - 10}px`;
-    console.log("cell info", cell.x_px, cell.y_px, cell.width, cell.height);
     input.style.outline = 'none'
     input.style.border = "0px";
-
-    input.value = cell.content[`${cell.x_pos},${cell.y_pos}`] || "";
+    input.value = cell.content
     document.body.appendChild(input);
     input.focus();
     const saveInput = () => {
@@ -101,43 +107,50 @@ window.addEventListener("keydown", (event) => {
     }
 });
 
-function selectWholeLine(cells){
-    console.log(cells);
-    cells.forEach((cell) => {
-        if (cell.x_pos == 0){
-            for (var i = 0; i < table.row_arr.length; i++){
-                cell = table.table[i][cell.y_pos];
-                if (!selectedCells.includes(cell) && (cell.x_pos != 0 || cell.y_pos != 0)) {
-                    selectedCells.push(cell);
-                }
-                drawSelectedCellIndexes(cell)
-            }
+function resizeLine(edge, initial_x_position, initial_y_position, new_x_position, new_y_position){
+    console.log("INSIDE RESIZELINE........")
+    console.log("edge: ",edge)
+    console.log("new x y pos: ", initial_x_position, initial_y_position, new_x_position, new_y_position);
+    var new_height = initial_width + new_y_position - initial_y_position;
+    var new_width = initial_width + new_x_position - initial_x_position;
+    rows[edge-1] = new_width;
+    console.log("newwidth: ", new_width)
+    table.drawTable()
+}
+
+function nearEdge(x_position){
+    var rowtillnow = 0;
+    for (var i=0; i<rows.length; i++){
+        console.log("absolute: ", Math.abs(rowtillnow - x_position),"xpos", x_position);
+        if (Math.abs(rowtillnow - x_position) < 10){
+            return i;
         }
-        if (cell.y_pos == 0){
-            for (var i = 0; i < table.col_arr.length; i++){
-                cell = table.table[cell.x_pos][i];
-                if (!selectedCells.includes(cell)) {
-                    selectedCells.push(cell);
-                }
-                drawSelectedCellIndexes(cell);
-            }
-        }
-    });
-    // for (cell in cells){
-        
-    // }
+        rowtillnow += rows[i]
+    }
+    return 0;
 }
 
 canvas.addEventListener("mousedown", (event) => {
     table.drawTable();
     selectedCells = [];
+    isResizeEdge = false;
     let rect = canvas.getBoundingClientRect();
     let x_position = event.clientX - rect.left;
     let y_position = event.clientY - rect.top;
     initialCell = getCellFromClick(x_position, y_position);
 
     if (initialCell.x_pos == 0 || initialCell.y_pos == 0){
-        selectWholeLine([initialCell]);
+        edge = nearEdge(x_position)
+        if (edge){
+            initial_width = rows[edge-1]
+            initial_height = cols[edge]-1
+            initial_x_position = event.clientX - rect.left;
+            initial_y_position = event.clientY - rect.top;
+            isResizeEdge = true;
+        }
+        else{
+            selectWholeLine([initialCell]);
+        }
     }
 
     selected_cell = initialCell;
@@ -156,6 +169,12 @@ canvas.addEventListener("mousemove", (event) => {
     var minn = Number.POSITIVE_INFINITY;
     var maxx = Number.NEGATIVE_INFINITY;
     if (isMouseDown) {
+        if (isResizeEdge){
+            let rect = canvas.getBoundingClientRect();
+            let new_x_position = event.clientX - rect.left;
+            let new_y_position = event.clientY - rect.top;
+            resizeLine(edge, initial_x_position, initial_y_position, new_x_position, new_y_position);
+        }
         table.drawTable();
         let rect = canvas.getBoundingClientRect();
         let x_position = event.clientX - rect.left;
@@ -170,7 +189,6 @@ canvas.addEventListener("mousemove", (event) => {
             drawSelectedCellIndexes(cell);
         });
         
-
         for (var i = 0; i < selectedCells.length; i++) {
             if (!isNaN(parseFloat(selectedCells[i].content))){
                 sum += parseFloat(selectedCells[i].content)
@@ -179,12 +197,19 @@ canvas.addEventListener("mousemove", (event) => {
             minn = Math.min(minn, selectedCells[i].content);
             maxx = Math.max(maxx, selectedCells[i].content);
         }
-        console.log("sum", sum, average, minn, maxx);
+        console.log("sum", sum, "average", average, "minn", minn, "maxx", maxx);
     }
 });
 
 canvas.addEventListener("mouseup", (event) => {
     isMouseDown = false;
+    initial_y_position = 0;
+    var initial_x_position = 0;
+    var initial_x_position = 0;
+    var new_x_position = 0;
+    var new_y_position = 0;
+    var initial_width = 0;
+    var initial_height = 0;
 });
 
-export { c, table };
+export { c, table};
