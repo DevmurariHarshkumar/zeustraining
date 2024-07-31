@@ -1,3 +1,4 @@
+console.log("b")
 var apidata;
 
 const apiUrl = 'http://localhost:5205/api/v1/user/getdb';

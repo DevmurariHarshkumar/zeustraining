@@ -1,5 +1,7 @@
-import { Table } from "./table.js";
+console.log("i")
+
 import { apidata } from "./backend.js";
+import { Table } from "./table.js";
 import {
     Cell,
     getSelectedCells,
@@ -19,6 +21,8 @@ canvas.height = window.innerHeight;
 
 var c = canvas.getContext("2d");
 
+
+// from apidata
 var rows = new Array(apidata[0].length).fill(130);
 rows[0] = 21;
 var cols = new Array(apidata.length).fill(19);
@@ -113,11 +117,16 @@ window.addEventListener("keydown", (event) => {
 
 function resizeLine(edge, initial_x_position, initial_y_position, new_x_position, new_y_position){
     var new_width = initial_width + new_x_position - initial_x_position;
-    rows[edge-1] = new_width;
+    if (new_width > 25){
+        rows[edge-1] = new_width;
+    }
 }
 function resizeLiney(edge, initial_x_position, initial_y_position, new_x_position, new_y_position){
     var new_height = initial_height + new_y_position - initial_y_position;
-    cols[edge-1] = new_height;
+    if (new_height > 15){
+        cols[edge-1] = new_height;
+    }
+    
 }
 
 function nearEdgex(x_position){
@@ -207,31 +216,35 @@ canvas.addEventListener("mousemove", (event) => {
                     resizeLiney(edge, initial_x_position, initial_y_position, new_x_position, new_y_position);
                 }
             }
+            table.drawTable();
         }
+        else{
+            table.drawTable();
+            let rect = canvas.getBoundingClientRect();
+            let x_position = event.clientX - rect.left;
+            let y_position = event.clientY - rect.top;
+            finalCell = getCellFromClick(x_position, y_position);
     
-        table.drawTable();
-        let rect = canvas.getBoundingClientRect();
-        let x_position = event.clientX - rect.left;
-        let y_position = event.clientY - rect.top;
-        finalCell = getCellFromClick(x_position, y_position);
-
-        selectedCells = getSelectedCells(initialCell, finalCell);
-        if (finalCell.x_pos == 0 || finalCell.y_pos == 0){
-            selectWholeLine(selectedCells);
-        }
-        selectedCells.forEach((cell) => {
-            drawSelectedCellIndexes(cell);
-        });
-        
-        for (var i = 0; i < selectedCells.length; i++) {
-            if (!isNaN(parseFloat(selectedCells[i].content))){
-                sum += parseFloat(selectedCells[i].content)
+            selectedCells = getSelectedCells(initialCell, finalCell);
+            if (finalCell.x_pos == 0 || finalCell.y_pos == 0){
+                selectWholeLine(selectedCells);
             }
-            average = sum / selectedCells.length;
-            minn = Math.min(minn, selectedCells[i].content);
-            maxx = Math.max(maxx, selectedCells[i].content);
+            selectedCells.forEach((cell) => {
+                drawSelectedCellIndexes(cell);
+            });
+            
+            for (var i = 0; i < selectedCells.length; i++) {
+                if (!isNaN(parseFloat(selectedCells[i].content))){
+                    sum += parseFloat(selectedCells[i].content)
+                }
+                average = sum / selectedCells.length;
+                minn = Math.min(minn, selectedCells[i].content);
+                maxx = Math.max(maxx, selectedCells[i].content);
+            }
+            console.log("sum", sum, "average", average, "minn", minn, "maxx", maxx);
+            var element = document.querySelector(".selected_cell_info");
+            element.innerHTML = `sum: ${sum} \n, average: ${average} \n, min: ${minn} \n, max: ${maxx}`;
         }
-        console.log("sum", sum, "average", average, "minn", minn, "maxx", maxx);
     }});
 
 canvas.addEventListener("mouseup", (event) => {
@@ -245,5 +258,11 @@ canvas.addEventListener("mouseup", (event) => {
     initial_height = 0;
     isResizeEdge = false;
 });
+
+// canvas.addEventListener("wheel", (event) => {
+//     console.log(event.deltaY)
+//     table.drawGrid(20)
+//     table.drawTable(20)
+// })
 
 export { c, table};

@@ -1,3 +1,4 @@
+console.log("t")
 import { c } from "./index.js";
 import { Cell } from "./cell.js";
 
@@ -109,15 +110,16 @@ class Table {
         // requestAnimationFrame(this.drawGrid)
     }
 
-    drawTable() {
+    drawTable(rowstart=0) {
         c.clearRect(0,0,8000,8000);
         this.make2darray()
         this.drawGrid();
+        console.log("asdfasdf", rowstart)
 
         var tillnowi = 0;
-        for (var i = 0; i < this.row_arr.length; i++) {
+        for (var i=0; i < this.row_arr.length; i++) {
             var tillnowj = 0;
-            for (var j = 0; j < this.col_arr.length; j++) {
+            for (var j = rowstart; j < this.col_arr.length; j++) {
                 if (i == 0 || j == 0){
                     if (i == 0 && j == 0){
                         const content = "null";

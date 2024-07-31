@@ -1,3 +1,4 @@
+console.log("c")
 import { c, table } from "./index.js";
 
 class Cell {
