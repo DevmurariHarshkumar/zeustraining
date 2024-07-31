@@ -26,13 +26,15 @@ namespace api.Controllers
         {
             string connectionString = "Server=127.0.0.1; User ID=root; Password=root; Database=harsh; CharSet=utf8";
         
-            MySqlConnection connection = new MySqlConnection(connectionString);
+            MySqlConnection connection = new(connectionString);
             
             try{
                 connection.Open();
                 string query = "SELECT * FROM user LIMIT 100";
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.Connection = connection;
+                MySqlCommand command = new(query, connection)
+                {
+                    Connection = connection
+                };
                 List<User> users = (List<User>)await connection.QueryAsync<User>(query);                
                 Console.WriteLine(users);
                 return Ok(users);

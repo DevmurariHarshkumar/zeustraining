@@ -197,6 +197,14 @@ canvas.addEventListener("mousedown", (event) => {
     }
 });
 
+function updateDropdownContent(sum, average, minn, maxx) {
+    document.getElementById('sum').textContent = `Sum: ${sum}`;
+    document.getElementById('average').textContent = `Average: ${average}`;
+    document.getElementById('min').textContent = `Min: ${minn}`;
+    document.getElementById('max').textContent = `Max: ${maxx}`;
+}
+
+
 canvas.addEventListener("mousemove", (event) => {
     var sum = 0;
     var average = 0;
@@ -242,8 +250,9 @@ canvas.addEventListener("mousemove", (event) => {
                 maxx = Math.max(maxx, selectedCells[i].content);
             }
             console.log("sum", sum, "average", average, "minn", minn, "maxx", maxx);
-            var element = document.querySelector(".selected_cell_info");
-            element.innerHTML = `sum: ${sum} \n, average: ${average} \n, min: ${minn} \n, max: ${maxx}`;
+            // var element = document.querySelector(".selected_cell_info");
+            // element.innerHTML = `sum: ${sum} \n, average: ${average} \n, min: ${minn} \n, max: ${maxx}`;
+            updateDropdownContent(sum, average, minn, maxx);
         }
     }});
 

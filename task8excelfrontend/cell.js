@@ -51,6 +51,7 @@ function getCellFromClick(x, y) {
                 y >= cell.y_px &&
                 y <= cell.y_px + cell.height
             ) {
+                console.log(cell)
                 return cell;
             }
         }
