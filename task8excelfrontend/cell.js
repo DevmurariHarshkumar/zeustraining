@@ -12,7 +12,9 @@ class Cell {
         this.y_pos = y_pos;
     }
 
-    drawCell() {
+    drawCell(line_offset) { // offset minus
+        // console.log("offset ", offset)
+        var pixel_offset = line_offset*19 //line_offset*line_height
         c.fillStyle = "black";
         c.font = "11px serif";
         c.textAlign = "center";
@@ -20,8 +22,8 @@ class Cell {
         c.textRendering = "auto";
         c.fillText(
             this.content,
-            this.x_px + this.width / 2,
-            this.y_px + this.height / 2,
+            (this.x_px) + this.width / 2,
+            (this.y_px-pixel_offset) + this.height / 2,
             this.width
         );
     }
@@ -51,36 +53,11 @@ function getCellFromClick(x, y) {
                 y >= cell.y_px &&
                 y <= cell.y_px + cell.height
             ) {
-                console.log(cell)
                 return cell;
             }
         }
     }
     return null;
-}
-
-
-function updateSelectedCellMain(cell){
-    c.fillStyle = "white";
-    c.fillRect(cell.x_px+2, cell.y_px+2, cell.width-2, cell.height-2);
-    c.strokeStyle = "#1A73E8";
-    c.strokeRect(cell.x_px+1, cell.y_px+1, cell.width-1, cell.height-1);
-    c.strokeRect(cell.x_px+1, cell.y_px+1, cell.width-1, cell.height-1);
-    c.fillStyle = "black";
-    c.font = "11px serif";
-    c.textAlign = "center";
-    c.textBaseline = "middle";
-    c.textRendering = "auto";
-    c.fillText(
-        cell.content,
-        cell.x_px + cell.width / 2,
-        cell.y_px + cell.height / 2,
-        cell.width
-    );
-    c.beginPath()
-    c.arc((cell.x_px+cell.width), (cell.y_px+cell.height), 3, 0, 2 * Math.PI);
-    c.fillStyle = "blue";
-    c.fill()
 }
 
 function drawSelectedCellMain(cell){

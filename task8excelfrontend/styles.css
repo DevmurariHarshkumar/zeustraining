@@ -7,62 +7,58 @@ canvas {
     margin-top: 0px;
 }
 
+
+.ribbon {
+    display: flex;
+    align-items: center;
+    background-color: #f3f3f3;
+    border-bottom: 1px solid #ccc;
+    height: 70px;
+    margin: 0px;
+    width: 100%;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+}
+
+.ribbon button {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0 5px;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.ribbon button:hover {
+    background-color: #e0e0e0;
+}
+
+.ribbon button:active {
+    background-color: #d0d0d0;
+}
+
+.ribbon button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #007bff;
+}
+
+.ribbon input[type="file"] {
+    display: none;
+}
+
+
 .selected_cell_info{
     background-color: white;
     position: absolute;
     width: auto;
-    height: 20px;
-}
+    height: 25px;
+    margin: 0px;
 
-/* .dropdown {
-    position: absolute;
-    right: 0;
-    z-index: 1;
 }
-
-.dropdown-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 4px 4px;
-    font-size: 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 2px;
-}
-
-.dropdown-button:hover {
-    background-color: #45a049;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 100px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: 2px;
-    padding: 4px;
-    box-sizing: border-box;
-}
-
-.dropdown-content p {
-    margin: 0;
-    padding: 5px 0;
-}
-
-.dropdown-content p:first-of-type {
-    border-top: none;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-} */
 
 
 .dropdown {
-    /* position: relative;
-    display: inline-block;  */
     position: absolute;
     right: 0;
     z-index: 1;
@@ -71,13 +67,14 @@ canvas {
 .dropdown-button {
     background-color: #4CAF50;
     color: white;
-    padding: 4px 4px;
+    padding: 4px 4px;   
     font-size: 10px;
     border: none;
     cursor: pointer;
     border-radius: 2px;
     position: relative;
     z-index: 2;
+    margin: 0px;
 }
 
 .dropdown-button:hover {
@@ -108,7 +105,6 @@ canvas {
     border-top: none;
 }
 
-/* Show dropdown on button hover */
 .dropdown:hover .dropdown-content {
     display: block;
 }

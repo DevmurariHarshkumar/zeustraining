@@ -15,7 +15,7 @@ import {
 var canvas = document.querySelector("canvas");
 
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.height = window.innerHeight-100;
 // canvas.width = 4000;
 // canvas.height = 4000;
 
@@ -35,8 +35,8 @@ var new_x_position = 0;
 var new_y_position = 0;
 var initial_width = 0;
 var initial_height = 0;
+var mouse_down_cell;
 
-table.make2darray();
 table.drawTable();
 
 var selected_cell, selectedCells, isMouseDown, initialCell, finalCell;
@@ -60,8 +60,8 @@ canvas.addEventListener("dblclick", (event) => {
     const input = document.createElement("input");
     input.type = "text";
     input.style.position = "absolute";
-    input.style.left = `${cell.x_px + 3}px`;
-    input.style.top = `${cell.y_px + 3}px`;
+    input.style.left = `${cell.x_px + 6}px`; // hardcoded
+    input.style.top = `${cell.y_px + 75}px`; // hardcoded
     input.style.width = `${cell.width - 10}px`;
     input.style.height = `${cell.height - 10}px`;
     input.style.outline = 'none'
@@ -75,8 +75,6 @@ canvas.addEventListener("dblclick", (event) => {
         document.body.removeChild(input);
         table.drawTable();
     };
-    console.log(table.table[cell.x_pos][cell.y_pos]);
-    console.log("input.value", input.value);
     table.drawTable();
 
     input.addEventListener("blur", saveInput);
@@ -126,13 +124,11 @@ function resizeLiney(edge, initial_x_position, initial_y_position, new_x_positio
     if (new_height > 15){
         cols[edge-1] = new_height;
     }
-    
 }
 
 function nearEdgex(x_position){
     var rowtillnow = 0;
     for (var i=0; i<rows.length; i++){
-        console.log("absolute: ", Math.abs(rowtillnow - x_position),"xpos", x_position);
         if (Math.abs(rowtillnow - x_position) < 5){
             return i;
         }
@@ -143,7 +139,6 @@ function nearEdgex(x_position){
 function nearEdgey(y_position){
     var coltillnow = 0;
     for (var j=0; j<cols.length; j++){
-        console.log("absolute: ", Math.abs(coltillnow - y_position),"ypos", y_position);
         if (Math.abs(coltillnow - y_position) < 5){
             return j;
         }
@@ -160,9 +155,12 @@ canvas.addEventListener("mousedown", (event) => {
     let x_position = event.clientX - rect.left;
     let y_position = event.clientY - rect.top;
     initialCell = getCellFromClick(x_position, y_position);
+    console.log("cell", initialCell)
+    mouse_down_cell = initialCell;
 
     if (initialCell.x_pos == 0 || initialCell.y_pos == 0){
         if (initialCell.y_pos == 0){
+            
             edge = nearEdgex(x_position)
             if (edge){
                 initial_width = rows[edge-1]
@@ -170,6 +168,9 @@ canvas.addEventListener("mousedown", (event) => {
                 initial_x_position = event.clientX - rect.left;
                 initial_y_position = event.clientY - rect.top;
                 isResizeEdge = true;
+            }
+            else{
+                selectWholeLine([initialCell]);
             }
         }
         if (initialCell.x_pos == 0){
@@ -181,9 +182,9 @@ canvas.addEventListener("mousedown", (event) => {
                 initial_y_position = event.clientY - rect.top;
                 isResizeEdge = true;
             }
-        }
-        else{
-            selectWholeLine([initialCell]);
+            else{
+                selectWholeLine([initialCell]);
+            }
         }
     }
 
@@ -216,11 +217,13 @@ canvas.addEventListener("mousemove", (event) => {
             let new_x_position = event.clientX - rect.left;
             let new_y_position = event.clientY - rect.top;
             initialCell = getCellFromClick(new_x_position, new_y_position);
-            if (initialCell.x_pos == 0 || initialCell.y_pos == 0){
-                if (initialCell.y_pos == 0){
+            if (mouse_down_cell.x_pos == 0 || mouse_down_cell.y_pos == 0){
+                if (mouse_down_cell.y_pos == 0){
+                    document.body.style.cursor = "col-resize"
                     resizeLine(edge, initial_x_position, initial_y_position, new_x_position, new_y_position);
                 }
-                if (initialCell.x_pos == 0){
+                if (mouse_down_cell.x_pos == 0){
+                    document.body.style.cursor = "row-resize"
                     resizeLiney(edge, initial_x_position, initial_y_position, new_x_position, new_y_position);
                 }
             }
@@ -232,7 +235,6 @@ canvas.addEventListener("mousemove", (event) => {
             let x_position = event.clientX - rect.left;
             let y_position = event.clientY - rect.top;
             finalCell = getCellFromClick(x_position, y_position);
-    
             selectedCells = getSelectedCells(initialCell, finalCell);
             if (finalCell.x_pos == 0 || finalCell.y_pos == 0){
                 selectWholeLine(selectedCells);
@@ -249,7 +251,6 @@ canvas.addEventListener("mousemove", (event) => {
                 minn = Math.min(minn, selectedCells[i].content);
                 maxx = Math.max(maxx, selectedCells[i].content);
             }
-            console.log("sum", sum, "average", average, "minn", minn, "maxx", maxx);
             // var element = document.querySelector(".selected_cell_info");
             // element.innerHTML = `sum: ${sum} \n, average: ${average} \n, min: ${minn} \n, max: ${maxx}`;
             updateDropdownContent(sum, average, minn, maxx);
@@ -266,12 +267,19 @@ canvas.addEventListener("mouseup", (event) => {
     initial_width = 0;
     initial_height = 0;
     isResizeEdge = false;
+    document.body.style.cursor = "auto"
 });
 
-// canvas.addEventListener("wheel", (event) => {
-//     console.log(event.deltaY)
-//     table.drawGrid(20)
-//     table.drawTable(20)
-// })
+canvas.addEventListener("wheel", (event) => {
+    console.log(event.deltaY)
+    if (event.deltaY > 0){
+        table.drawGrid(20)
+        table.drawTable(20)
+    }
+    else{
+        table.drawGrid(-20)
+        table.drawTable(-20)
+    }
+})
 
 export { c, table};

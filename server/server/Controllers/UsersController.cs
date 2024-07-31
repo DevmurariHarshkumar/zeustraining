@@ -30,7 +30,7 @@ namespace api.Controllers
             
             try{
                 connection.Open();
-                string query = "SELECT * FROM user LIMIT 100";
+                string query = "SELECT * FROM user LIMIT 500";
                 MySqlCommand command = new(query, connection)
                 {
                     Connection = connection
