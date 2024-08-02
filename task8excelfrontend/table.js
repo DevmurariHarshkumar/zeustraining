@@ -1,9 +1,8 @@
 console.log("t")
-import { c } from "./index.js";
-import { Cell } from "./cell.js";
+import { c , line_offset} from "./index.js";
+import { Cell, getSelectedCells, getCellFromClick, drawSelectedCellMain, drawSelectedCellIndexes, drawSelectedCell, selectWholeLine, selectArea } from "./cell.js";
 
 var line_width = 1;
-var line_offset = 0;
 class Table {
     constructor(
         no_row,
@@ -107,18 +106,10 @@ class Table {
             c.stroke();
             tillnowj += this.col_arr[i];
         }
-        // requestAnimationFrame(this.drawGrid)
     }
 
-    drawTable(rowstart=0) {
-        console.log("asdasdfasdfdsa", rowstart, line_offset)
-        if (line_offset == 0 && rowstart < 0){
-            console.log("satisfied")
-            line_offset = 0
-            rowstart = 0
-        }
-        line_offset += rowstart;
-        console.log("line_offset ", line_offset)
+    drawTable() {
+        
         c.clearRect(0,0,8000,8000);
         this.make2darray()
         this.drawGrid(line_offset);
@@ -154,7 +145,18 @@ class Table {
             }
             tillnowi = tillnowi + this.row_arr[i];
         }
-        // requestAnimationFrame(this.drawTable)
+    }
+
+
+    findElement(element) {
+        for (var i=0; i < this.table.length; i++) {
+            for (var j = 0; j < this.table[0].length; j++) {
+                    if(this.table[i][j].content == element){
+                        var cell = this.table[i][j]
+                        drawSelectedCell(cell, line_offset);
+                    }
+            }
+        }
     }
 }
 

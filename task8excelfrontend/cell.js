@@ -1,5 +1,5 @@
 console.log("c")
-import { c, table } from "./index.js";
+import { c, table, line_offset } from "./index.js";
 
 class Cell {
     constructor(content, x_px, y_px, width = 150, height = 50, x_pos, y_pos) {
@@ -43,16 +43,18 @@ function getSelectedCells(initialCell, finalCell) {
     return selectedCells;
 }
 
-function getCellFromClick(x, y) {
+function getCellFromClick(x, y, line_offset) {
+    console.log("inside gcfc lineoffset", line_offset)
     for (let i = 0; i < table.table.length; i++) {
         for (let j = 0; j < table.table[i].length; j++) {
             const cell = table.table[i][j];
             if (
                 x >= cell.x_px &&
                 x <= cell.x_px + cell.width &&
-                y >= cell.y_px &&
-                y <= cell.y_px + cell.height
+                y >= -line_offset*19 + cell.y_px &&
+                y <= -line_offset*19 + cell.y_px + cell.height
             ) {
+                console.log("this is cell ", cell.x_pos, cell.y_pos)
                 return cell;
             }
         }
@@ -60,31 +62,32 @@ function getCellFromClick(x, y) {
     return null;
 }
 
-function drawSelectedCellMain(cell){
-    c.strokeStyle = "#1A73E8";
-    c.strokeRect(cell.x_px+1, cell.y_px+1, cell.width-1, cell.height-1);
-    c.strokeRect(cell.x_px+1, cell.y_px+1, cell.width-1, cell.height-1);
+function drawSelectedCellMain(cell, line_offset){
+    c.strokeStyle = "rgb(35, 116, 72)";
+    console.log("lineoffset in drawscmain", line_offset);
+    c.strokeRect(cell.x_px+1, (cell.y_px-line_offset*19)+1, cell.width-1, cell.height-1);
+    c.strokeRect(cell.x_px+1, (cell.y_px-line_offset*19)+1, cell.width-1, cell.height-1);
     c.beginPath()
-    c.arc((cell.x_px+cell.width), (cell.y_px+cell.height), 3, 0, 2 * Math.PI);
-    c.fillStyle = "blue";
+    c.arc((cell.x_px+cell.width), ((cell.y_px-line_offset*19)+cell.height), 3, 0, 2 * Math.PI);
+    c.fillStyle = "rgb(35, 116, 72)";
     c.fill()
 }
 
 function drawSelectedCellIndexes(cell){
-    c.fillStyle = "white";
-    c.fillRect(cell.x_px+2, cell.y_px+2, cell.width-2, cell.height-2);
-    c.fillStyle = "black";
-    c.font = "11px serif";
-    c.textAlign = "center";
-    c.textBaseline = "middle";
-    c.textRendering = "auto";
-    c.fillText(
-        cell.content,
-        cell.x_px + cell.width / 2,
-        cell.y_px + cell.height / 2,
-        cell.width
-    );
-    c. fillStyle = "rgba(0, 120, 215, 0.3)"
+    // c.fillStyle = "white";
+    // c.fillRect(cell.x_px+2, cell.y_px+2, cell.width-2, cell.height-2);
+    // c.fillStyle = "black";
+    // c.font = "10px"; //font_size
+    // c.textAlign = "center";
+    // c.textBaseline = "middle";
+    // c.textRendering = "auto";
+    // c.fillText(
+    //     cell.content,
+    //     cell.x_px + cell.width / 2,
+    //     cell.y_px + cell.height / 2,
+    //     cell.width
+    // );
+    c. fillStyle = "rgba(33, 178, 31, 0.3)"
     c.fillRect(
         cell.x_px + 0.25,
         cell.y_px + 0.25,
@@ -93,10 +96,27 @@ function drawSelectedCellIndexes(cell){
     );
 }
 
-function drawSelectedCell(cell) {
-    drawSelectedCellMain(cell);
-    drawSelectedCellIndexes(table.table[0][cell.y_pos]);
-    drawSelectedCellIndexes(table.table[cell.x_pos][0]);
+
+function selectArea(initialCell, finalCell, selectedCells){
+    const startX = Math.min(initialCell.x_pos, finalCell.x_pos);
+    const endX = Math.max(initialCell.x_pos, finalCell.x_pos);
+    const startY = Math.min(initialCell.y_pos, finalCell.y_pos);
+    const endY = Math.max(initialCell.y_pos, finalCell.y_pos);
+
+    const extremeTopLeftCell = selectedCells.find(cell => cell.x_pos === startX && cell.y_pos === startY);
+
+    // Find extreme bottom-right cell
+    const extremeBottomRightCell = selectedCells.find(cell => cell.x_pos === endX && cell.y_pos === endY);
+
+    console.log('Extreme Top-Left Cell:', extremeTopLeftCell);
+    console.log('Extreme Bottom-Right Cell:', extremeBottomRightCell);
+
+    c.strokeStyle = "#000000";
+    c.strokeRect(extremeTopLeftCell.x_px+1, extremeTopLeftCell.y_px+1, extremeBottomRightCell.x_px-extremeTopLeftCell.x_px+extremeBottomRightCell.width-1, extremeBottomRightCell.y_px-extremeTopLeftCell.y_px+extremeBottomRightCell.height-1);
+    c.beginPath()
+    c.arc((extremeBottomRightCell.x_px+extremeBottomRightCell.width), (extremeBottomRightCell.y_px+extremeBottomRightCell.height), 3, 0, 2 * Math.PI);
+    c.fillStyle = "blue";
+    c.fill()
 }
 
 function selectWholeLine(cells){
@@ -122,5 +142,13 @@ function selectWholeLine(cells){
     });
 }
 
+function drawSelectedCell(cell, line_offset) {
+    drawSelectedCellMain(cell, line_offset);
+    drawSelectedCellIndexes(table.table[0][cell.y_pos]);
+    drawSelectedCellIndexes(table.table[cell.x_pos][0]);
+}
 
-export { Cell, getSelectedCells, getCellFromClick, drawSelectedCellMain, drawSelectedCellIndexes, drawSelectedCell, selectWholeLine };
+
+
+
+export { Cell, getSelectedCells, getCellFromClick, drawSelectedCellMain, drawSelectedCellIndexes, drawSelectedCell, selectWholeLine, selectArea };

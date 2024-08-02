@@ -43,9 +43,9 @@ canvas {
     box-shadow: 0 0 0 2px #007bff;
 }
 
-.ribbon input[type="file"] {
+/* .ribbon input[type="file"] {
     display: none;
-}
+} */
 
 
 .selected_cell_info{

@@ -1,14 +1,13 @@
 console.log("b")
-var apidata;
+var apidataa;
 
-const apiUrl = 'http://localhost:5205/api/v1/user/getdb';
 
 async function fetchData(){
     try{
-    const response = await fetch(apiUrl);
+    const response = await fetch('http://localhost:5205/api/v1/user/getdb');
     const data = await response.json();
-    apidata = data;
-    apidata = data.map(data => Object.values(data));
+    apidataa = data;
+    apidataa = data.map(data => Object.values(data));
     }
     catch(error)
     {
@@ -17,11 +16,11 @@ async function fetchData(){
 }
 
 
-try{
-    await fetchData();
-}
-catch{
-    console.log("internal server error");
-}
+// try{
+//     await fetchData();
+// }
+// catch{
+//     console.log("internal server error");
+// }
 
-export { apidata };
+export { fetchData, apidataa };
