@@ -71,9 +71,12 @@ function drawSelectedCellMain(cell, line_offset){
     c.fill()
 }
 
-function drawSelectedCellIndexes(cell){
+
+function drawSelectedCellArea(cell){
+    // erase and redraw text
+    // console.log("called");
     // c.fillStyle = "white";
-    // c.fillRect(cell.x_px+2, cell.y_px+2, cell.width-2, cell.height-2);
+    // c.fillRect(cell.x_px, cell.y_px, cell.width, cell.height);
     // c.fillStyle = "black";
     // c.font = "10px"; //font_size
     // c.textAlign = "center";
@@ -85,6 +88,8 @@ function drawSelectedCellIndexes(cell){
     //     cell.y_px + cell.height / 2,
     //     cell.width
     // );
+
+    // highlight cell
     c. fillStyle = "rgba(33, 178, 31, 0.3)"
     c.fillRect(
         cell.x_px + 0.25,
@@ -92,6 +97,53 @@ function drawSelectedCellIndexes(cell){
         cell.width - 1.5,
         cell.height - 1.5
     );
+    console.log("cell.x_pos", cell.x_pos)
+}
+
+function drawSelectedCellIndexes(cell, line_offset){
+    // erase and redraw text
+    console.log("called");
+    c.fillStyle = "white";
+    c.fillRect(cell.x_px, cell.y_px, cell.width, cell.height);
+    c.fillStyle = "black";
+    c.font = "10px"; //font_size
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    c.textRendering = "auto";
+    c.fillText(
+        cell.content,
+        cell.x_px + cell.width / 2,
+        cell.y_px + cell.height / 2,
+        cell.width
+    );
+
+    // highlight cell
+    c. fillStyle = "rgba(33, 178, 31, 0.3)"
+    c.fillRect(
+        cell.x_px + 0.25,
+        cell.y_px + 0.25 -line_offset*19,
+        cell.width - 1.5,
+        cell.height - 1.5
+    );
+    console.log("cell.x_pos", cell.x_pos)
+
+    // highlight line effect
+    if (cell.x_pos == 0){
+        c.strokeStyle = "rgba(33, 178, 31, 1)"
+        c.lineWidth = 2
+        c.beginPath();
+        c.moveTo(cell.x_px+cell.width, cell.y_px-line_offset*19);
+        c.lineTo(cell.x_px+cell.width, cell.y_px+cell.width-line_offset*19);
+        c.stroke();
+    }
+    else{
+        c.strokeStyle = "rgba(33, 178, 31, 1)"
+        c.lineWidth = 2
+        c.beginPath();
+        c.moveTo(cell.x_px, cell.y_px+cell.height);
+        c.lineTo(cell.x_px+cell.width, cell.y_px+cell.height);
+        c.stroke();
+    }
 }
 
 
@@ -102,16 +154,20 @@ function selectArea(initialCell, finalCell, selectedCells, line_offset){
     const endY = Math.max(initialCell.y_pos, finalCell.y_pos);
     const top_left = selectedCells.find(cell => cell.x_pos === startX && cell.y_pos === startY);
     const bottom_right = selectedCells.find(cell => cell.x_pos === endX && cell.y_pos === endY);
-    // console.log('Extreme Top-Left Cell:', top_left);
-    // console.log('Extreme Bottom-Right Cell:', bottom_right);
-    c.strokeStyle = "#137E43";
-    c.fillStyle = "#CAEAD8"
-    c.strokeRect(top_left.x_px+1, top_left.y_px+1, bottom_right.x_px-top_left.x_px+bottom_right.width-1, bottom_right.y_px-top_left.y_px+bottom_right.height-1);
-    c.fillRect(top_left.x_px+1, top_left.y_px+1, bottom_right.x_px-top_left.x_px+bottom_right.width-1, bottom_right.y_px-top_left.y_px+bottom_right.height-1)
+    c.strokeStyle = "rgba(30, 108, 66, 1)";
+    c.fillStyle = "rgba(30, 108, 66, 0.3)"
+    console.log("lineoffset ", line_offset)
+    c.strokeRect(top_left.x_px+1, (top_left.y_px-line_offset*19)+1, bottom_right.x_px-top_left.x_px+bottom_right.width-1, (bottom_right.y_px-top_left.y_px+bottom_right.height)-1);
+    c.fillRect(top_left.x_px+1, (top_left.y_px-line_offset*19)+1, bottom_right.x_px-top_left.x_px+bottom_right.width-1, bottom_right.y_px-top_left.y_px+bottom_right.height-1)
     c.beginPath()
-    c.arc((bottom_right.x_px+bottom_right.width), (bottom_right.y_px+bottom_right.height), 3, 0, 2 * Math.PI);
-    c.fillStyle = "blue";
+    c.arc((bottom_right.x_px+bottom_right.width), (bottom_right.y_px+bottom_right.height-line_offset*19), 3, 0, 2 * Math.PI);
+    c.fillStyle = "rgb(35, 116, 72)";
     c.fill()
+    
+    selectedCells.forEach(cell => {
+        drawSelectedCellIndexes(table.table[0][cell.y_pos], line_offset);
+        drawSelectedCellIndexes(table.table[cell.x_pos][0], line_offset);
+    });
 }
 
 function selectWholeLine(cells){
@@ -122,7 +178,7 @@ function selectWholeLine(cells){
                 if (!cells.includes(cell) && (cell.x_pos != 0 || cell.y_pos != 0)) {
                     cells.push(cell);
                 }
-                drawSelectedCellIndexes(cell)
+                drawSelectedCellArea(cell)
             }
         }
         if (cell.y_pos == 0){
@@ -131,7 +187,7 @@ function selectWholeLine(cells){
                 if (!cells.includes(cell)) {
                     cells.push(cell);
                 }
-                drawSelectedCellIndexes(cell);
+                drawSelectedCellArea(cell);
             }
         }
     });
@@ -139,8 +195,8 @@ function selectWholeLine(cells){
 
 function drawSelectedCell(cell, line_offset) {
     drawSelectedCellMain(cell, line_offset);
-    drawSelectedCellIndexes(table.table[0][cell.y_pos]);
-    drawSelectedCellIndexes(table.table[cell.x_pos][0]);
+    drawSelectedCellIndexes(table.table[0][cell.y_pos], line_offset);
+    drawSelectedCellIndexes(table.table[cell.x_pos][0], line_offset);
 }
 
 

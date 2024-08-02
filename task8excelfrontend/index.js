@@ -13,7 +13,7 @@ import {
     selectArea
 } from "./cell.js";
 
-
+// rgb(30, 108, 66)
 // constants
 
 var apidata;
@@ -94,7 +94,10 @@ canvas.addEventListener("dblclick", (event) => {
     let y_position = event.clientY - rect.top;
     var cell = getCellFromClick(x_position, y_position, line_offset);
     selected_cell = cell;
-    make_input_field(cell, line_offset)
+    if (selected_cell.x_pos != 0 && selected_cell.y_pos != 0){
+        console.log("inside");
+        make_input_field(cell, line_offset)
+    }
 });
 
 
@@ -257,17 +260,16 @@ canvas.addEventListener("mousemove", (event) => {
                 selectWholeLine(selectedCells);
             }
             else{
-                // selectedCells.forEach((cell) => {
-                // drawSelectedCellIndexes(cell);
-                // });
-                selectArea(initialCell, finalCell, selectedCells)
+                selectArea(initialCell, finalCell, selectedCells, line_offset)
             }
             
+            var no_of_elements = 0
             for (var i = 0; i < selectedCells.length; i++) {
                 if (!isNaN(parseFloat(selectedCells[i].content))){
                     sum += parseFloat(selectedCells[i].content)
+                    no_of_elements+=1
                 }
-                average = sum / selectedCells.length;
+                average = sum / no_of_elements;
                 minn = Math.min(minn, selectedCells[i].content);
                 maxx = Math.max(maxx, selectedCells[i].content);
             }
@@ -307,12 +309,12 @@ function getscrollamount(rowstart){
 // scrolling
 canvas.addEventListener("wheel", (event) => {
     if (event.deltaY > 0){
-        getscrollamount(20)
+        getscrollamount(10)
         table.drawGrid()
         table.drawTable()
     }
     else{
-        getscrollamount(-20)
+        getscrollamount(-10)
         table.drawGrid()
         table.drawTable()
     }
