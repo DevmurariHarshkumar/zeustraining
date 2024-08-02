@@ -56,21 +56,14 @@ table.drawTable();
 //     drawSelectedCell(cell);
 // });
 
-
-// double click
-canvas.addEventListener("dblclick", (event) => {
-    let rect = canvas.getBoundingClientRect();
-    let x_position = event.clientX - rect.left;
-    let y_position = event.clientY - rect.top;
-    var cell = getCellFromClick(x_position, y_position, line_offset);
-    selected_cell = cell;
+function make_input_field(cell, line_offset){
     c.fillStyle = "white";
     c.fillRect(cell.x_px+2, cell.y_px+2, cell.width-5, cell.height-5);
     const input = document.createElement("input");
     input.type = "text";
     input.style.position = "absolute";
     input.style.left = `${cell.x_px + 6}px`; // hardcoded
-    input.style.top = `${cell.y_px + 75}px`; // hardcoded
+    input.style.top = `${cell.y_px + 75 - line_offset*19}px`; // hardcoded
     input.style.width = `${cell.width - 10}px`;
     input.style.height = `${cell.height - 8}px`;
     input.style.outline = 'none'
@@ -91,6 +84,17 @@ canvas.addEventListener("dblclick", (event) => {
             saveInput();
         }
     });
+}
+
+
+// double click
+canvas.addEventListener("dblclick", (event) => {
+    let rect = canvas.getBoundingClientRect();
+    let x_position = event.clientX - rect.left;
+    let y_position = event.clientY - rect.top;
+    var cell = getCellFromClick(x_position, y_position, line_offset);
+    selected_cell = cell;
+    make_input_field(cell, line_offset)
 });
 
 
@@ -253,9 +257,9 @@ canvas.addEventListener("mousemove", (event) => {
                 selectWholeLine(selectedCells);
             }
             else{
-                selectedCells.forEach((cell) => {
-                drawSelectedCellIndexes(cell);
-                });
+                // selectedCells.forEach((cell) => {
+                // drawSelectedCellIndexes(cell);
+                // });
                 selectArea(initialCell, finalCell, selectedCells)
             }
             

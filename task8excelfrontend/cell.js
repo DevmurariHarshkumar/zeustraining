@@ -44,7 +44,6 @@ function getSelectedCells(initialCell, finalCell) {
 }
 
 function getCellFromClick(x, y, line_offset) {
-    console.log("inside gcfc lineoffset", line_offset)
     for (let i = 0; i < table.table.length; i++) {
         for (let j = 0; j < table.table[i].length; j++) {
             const cell = table.table[i][j];
@@ -54,7 +53,6 @@ function getCellFromClick(x, y, line_offset) {
                 y >= -line_offset*19 + cell.y_px &&
                 y <= -line_offset*19 + cell.y_px + cell.height
             ) {
-                console.log("this is cell ", cell.x_pos, cell.y_pos)
                 return cell;
             }
         }
@@ -97,24 +95,21 @@ function drawSelectedCellIndexes(cell){
 }
 
 
-function selectArea(initialCell, finalCell, selectedCells){
+function selectArea(initialCell, finalCell, selectedCells, line_offset){
     const startX = Math.min(initialCell.x_pos, finalCell.x_pos);
     const endX = Math.max(initialCell.x_pos, finalCell.x_pos);
     const startY = Math.min(initialCell.y_pos, finalCell.y_pos);
     const endY = Math.max(initialCell.y_pos, finalCell.y_pos);
-
-    const extremeTopLeftCell = selectedCells.find(cell => cell.x_pos === startX && cell.y_pos === startY);
-
-    // Find extreme bottom-right cell
-    const extremeBottomRightCell = selectedCells.find(cell => cell.x_pos === endX && cell.y_pos === endY);
-
-    console.log('Extreme Top-Left Cell:', extremeTopLeftCell);
-    console.log('Extreme Bottom-Right Cell:', extremeBottomRightCell);
-
-    c.strokeStyle = "#000000";
-    c.strokeRect(extremeTopLeftCell.x_px+1, extremeTopLeftCell.y_px+1, extremeBottomRightCell.x_px-extremeTopLeftCell.x_px+extremeBottomRightCell.width-1, extremeBottomRightCell.y_px-extremeTopLeftCell.y_px+extremeBottomRightCell.height-1);
+    const top_left = selectedCells.find(cell => cell.x_pos === startX && cell.y_pos === startY);
+    const bottom_right = selectedCells.find(cell => cell.x_pos === endX && cell.y_pos === endY);
+    // console.log('Extreme Top-Left Cell:', top_left);
+    // console.log('Extreme Bottom-Right Cell:', bottom_right);
+    c.strokeStyle = "#137E43";
+    c.fillStyle = "#CAEAD8"
+    c.strokeRect(top_left.x_px+1, top_left.y_px+1, bottom_right.x_px-top_left.x_px+bottom_right.width-1, bottom_right.y_px-top_left.y_px+bottom_right.height-1);
+    c.fillRect(top_left.x_px+1, top_left.y_px+1, bottom_right.x_px-top_left.x_px+bottom_right.width-1, bottom_right.y_px-top_left.y_px+bottom_right.height-1)
     c.beginPath()
-    c.arc((extremeBottomRightCell.x_px+extremeBottomRightCell.width), (extremeBottomRightCell.y_px+extremeBottomRightCell.height), 3, 0, 2 * Math.PI);
+    c.arc((bottom_right.x_px+bottom_right.width), (bottom_right.y_px+bottom_right.height), 3, 0, 2 * Math.PI);
     c.fillStyle = "blue";
     c.fill()
 }
