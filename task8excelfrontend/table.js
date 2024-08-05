@@ -1,9 +1,15 @@
 console.log("t")
-import { c , line_offset} from "./index.js";
 import { Cell, getSelectedCells, getCellFromClick, drawSelectedCellMain, drawSelectedCellIndexes, drawSelectedCell, selectWholeLine, selectArea } from "./cell.js";
 
 var line_width = 1;
 class Table {
+    /**
+     * @param {number} no_row
+     * @param {number} no_col
+     * @param {Array<number>} row_arr
+     * @param {Array<number>} col_arr
+     * @param {Array<Array<Any>>} content
+     */
     constructor(
         no_row,
         no_col,
@@ -11,6 +17,9 @@ class Table {
         col_arr = [50, 50, 50],
         content = [[4], [5], [6]][[8], [9], [0]]
     ) {
+        /**
+         * @type {number} 
+         */
         this.no_row = no_row;
         this.no_col = no_col;
         this.row_arr = row_arr;
@@ -84,8 +93,10 @@ class Table {
         console.log("2d array done");
     }
 
-    
-    drawGrid(){
+
+    drawGrid(line_offset){
+        var canvas = document.querySelector("canvas");
+        var c = canvas.getContext("2d");
         var tillnowi = 0
         for(var i = 0; i < this.no_row; i++){
             c.beginPath();
@@ -99,8 +110,8 @@ class Table {
         var tillnowj = 0
         for(var i = 0; i < this.no_col; i++){
             c.beginPath();
-            c.moveTo(0, tillnowj+0.5);
-            c.lineTo(window.innerWidth, tillnowj+0.5);
+            c.moveTo(0, tillnowj+0.5-line_offset*19);
+            c.lineTo(window.innerWidth, tillnowj+0.5-line_offset*19);
             c.strokeStyle = "#e1e1e1";
             c.lineWidth = line_width;
             c.stroke();
@@ -108,12 +119,12 @@ class Table {
         }
     }
 
-    drawTable() {
-        
+    drawTable(line_offset) {
+        var canvas = document.querySelector("canvas");
+        var c = canvas.getContext("2d");
         c.clearRect(0,0,8000,8000);
         this.make2darray()
         this.drawGrid(line_offset);
-
         var tillnowi = 0;
         for (var i=0; i < this.row_arr.length; i++) {
             var tillnowj = 0;
@@ -148,16 +159,25 @@ class Table {
     }
 
 
-    findElement(element) {
+    findElement(table, element, line_offset) {
         for (var i=0; i < this.table.length; i++) {
             for (var j = 0; j < this.table[0].length; j++) {
                     if(this.table[i][j].content == element){
                         var cell = this.table[i][j]
-                        drawSelectedCell(cell, line_offset);
+                        drawSelectedCell(table, cell, line_offset);
                     }
             }
         }
     }
+
+
+    updateDropdownContent(sum, average, minn, maxx) {
+        document.getElementById('sum').textContent = `Sum: ${sum}`;
+        document.getElementById('average').textContent = `Average: ${average}`;
+        document.getElementById('min').textContent = `Min: ${minn}`;
+        document.getElementById('max').textContent = `Max: ${maxx}`;
+    }
+    
 }
 
 export { Table };
